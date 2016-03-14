@@ -1,0 +1,76 @@
+{% load static from staticfiles %}
+<!doctype html>
+
+<html lang="fr">
+    
+    <head>
+        
+        <meta charset="utf-8">
+
+        <title>{% block title %}Auxilium{% endblock %}</title>
+		
+        <meta name="description" content="Auxilium">
+		
+		{% block css %}
+
+		{% endblock %}
+		<link rel="stylesheet" href="{% static "css/app.css" %}">
+		<link rel="stylesheet" href="{% static "css/foundation.min.css" %}">
+		<link rel='stylesheet' href="{% static "css/foundation-icons.css" %}" type='text/css'>
+		<link rel="icon" type="image/x-icon" href="{% static "favicon.ico" %}">
+		
+		<link rel="stylesheet" href="{% static "css/jquery-ui.css" %}">
+		
+    </head>
+
+    <body>
+		{% block menu %}
+			<div class="top-bar">
+				<div class="top-bar-left">
+					<ul class="dropdown menu" data-dropdown-menu>
+						<li><a href="/">Home</a></li>
+						<li>
+							<a href="/a/">Articles</a>
+							<ul class="menu">
+								<li>
+									<a href="/a/add/">Ajouter</a>
+								</li>
+							</ul>
+						</li>
+						<li><a href="/admin/">Admin</a></li>
+					</ul>
+				</div>
+				<div class="top-bar-right">
+			<form method="post" action="">
+				{% csrf_token %}
+				<input class="input-group-field" type="text" placeholder="Article" id="article" maxlength="254" name="article"/>
+			</form>
+				</div>
+			</div>
+        {% endblock %}
+
+		{% block content %}
+
+		{% endblock %}
+	
+		<script src="/static/js/vendor/jquery.min.js"></script>
+		<script src="/static/js/jquery-ui.js"></script>
+		<script src="/static/js/foundation.js"></script>
+		<script type="text/javascript">
+			$(document).foundation();
+		</script>
+		<script type="text/javascript">
+		$(function() {
+		$("#article").autocomplete({
+			source: "/a/get_article/",
+			minLength: 2,
+			select: function( event, ui ) { 
+            window.location.href = ui.item.value;
+			}
+			});
+		});
+		</script>
+	
+    </body>
+    
+</html>

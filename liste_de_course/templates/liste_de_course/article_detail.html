@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.nom }}{% endblock %}
+
+{% block content %}
+	<h2>{{ article.nom }}</h2>
+		<p>{{ article.marque }}</p>
+		<p>{{ article.rayon }}</p>
+		<ul>
+			{% for categorie in categorie %}
+			<li>{{ categorie.nom }}</li>
+			{% endfor %}
+		</ul>
+		
+{% endblock %}

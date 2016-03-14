@@ -66,4 +66,7 @@ def get_article(request, **kwargs):
     return HttpResponse(data, mimetype)
 
 def add_to_list(request,**kwargs):
-    pass
+    
+    if request.method == "POST":
+        
+        pass

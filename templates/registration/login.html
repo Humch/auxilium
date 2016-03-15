@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block css %}
+	<link rel="stylesheet" href="/static/css/app_login.css">
+{% endblock %}
+
+{% block menu %}
+
+{% endblock %}
+
+{% block content %}
+
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+	<div class="row align-middle login-padding">
+		
+		{% if form.errors %}
+		<div class="row">
+			<div class="callout secondary">
+				<p class="redcolor">Login incorrect, merci de refaire une tentative</p>
+			</div>
+		</div>
+		{% endif %}
+		{% csrf_token %}
+			<div class="row">
+				<div class="small-12 medium-6 large-4 small-centered columns">
+					<input type="text" placeholder="Nom Utilisateur" id="id_username" maxlength="254" name="username"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="small-12 medium-6 large-4 small-centered columns">
+					<input type="password" placeholder="Mot de passe" id="id_password" name="password"  />
+				</div>
+			</div>
+			<div class="row">
+				<div class="small-6 small-centered columns">
+					<input type="submit" class="button input-align" value="Connexion" >
+					<input type="hidden" name="next" value="{{ next }}" />
+				</div>
+			</div>
+	</div>
+</form>
+
+{% endblock %}

@@ -28,23 +28,40 @@
 			<div class="top-bar">
 				<div class="top-bar-left">
 					<ul class="dropdown menu" data-dropdown-menu>
-						<li><a href="/">Home</a></li>
 						<li>
-							<a href="/a/">Articles</a>
-							<ul class="menu">
-								<li>
-									<a href="/a/add/">Ajouter</a>
-								</li>
-							</ul>
+							<a href="/">Home</a>
 						</li>
-						<li><a href="/admin/">Admin</a></li>
+						<li>
+							<a href="/a/a_">Articles</a>
+								<ul class="menu">
+									<li>
+										<a href="/a/a_add/">Ajouter</a>
+									</li>
+								</ul>
+						</li>
+						<li>
+							<a href="/a/l_">Listes</a>
+						</li>
 					</ul>
 				</div>
 				<div class="top-bar-right">
-			<form method="post" action="">
-				{% csrf_token %}
-				<input class="input-group-field" type="text" placeholder="Article" id="article" maxlength="254" name="article"/>
-			</form>
+					<ul class="dropdown menu" data-dropdown-menu>
+						<li>
+							Bonjour, {{ request.user }}
+						</li>
+						{% if user.is_superuser %}
+							<li>
+								<a href="/admin/">Admin</a>
+							</li>
+						{% endif %}
+						<li class="li-menu">
+							<a href="{% url 'django.contrib.auth.views.logout' %}"><i class="fi-power menu-i"></i></a>
+						</li>
+					</ul>
+<!--				<form method="post" action="">
+						{% csrf_token %}
+						<input class="input-group-field" type="text" placeholder="Article" id="article" maxlength="254" name="article"/>
+					</form> -->
 				</div>
 			</div>
         {% endblock %}

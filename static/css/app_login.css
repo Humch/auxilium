@@ -1,0 +1,33 @@
+html
+    { 
+        background-attachment: fixed !important;
+        background-clip: border-box !important;
+        background-image: url("/static/css/img/bg.jpg") !important;
+        background-origin: padding-box !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+    }
+
+body
+    {
+        background: rgba(0, 0, 0, 0) !important ;
+    }
+
+.login-padding
+    {
+        padding: 50px !important;
+    }
+
+.input-align
+    {
+        margin:0px auto !important;
+        display:block !important;
+    }
+
+.redcolor
+    {
+        color: red !important;
+    }

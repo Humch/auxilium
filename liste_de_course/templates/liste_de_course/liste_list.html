@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Listes de course{% endblock %}
+
+{% block content %}
+	<h2>Listes de course</h2>
+		<ul>
+			{% for liste in object_list %}
+			<li>
+				<a href='/a/l_{{ liste.id }}'>{{ liste.nom }}</a> <a href='/a/l_maj/{{ liste.id }}'><span class="info badge"><i class="fi-refresh"></i></span></a> <a href='/a/l_delete/{{ liste.id }}'><span class="info badge"><i class="fi-x"></i></span></a>
+			</li>
+			{% endfor %}
+		</ul>
+{% endblock %}

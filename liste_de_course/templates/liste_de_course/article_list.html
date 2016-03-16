@@ -4,13 +4,15 @@
 
 {% block content %}
 	<h2>Articles</h2>
-		<ul>
 			{% for article in object_list %}
-			<li>
-				<a href='/a/a_{{ article.id }}'>{{ article.nom }}</a> <a href='/a/a_maj/{{ article.id }}'><span class="info badge"><i class="fi-refresh"></i></span></a> <a href='/a/a_delete/{{ article.id }}'><span class="info badge"><i class="fi-x"></i></span></a>
-			</li>
+				<div class="row">
+					<a href='/a/a_{{ article.id }}'>{{ article.nom }}</a>
+					<a href='/a/a_maj/{{ article.id }}'><span class="info badge"><i class="fi-refresh"></i></span></a>
+					{% if user.is_superuser %}
+						<a href='/a/a_delete/{{ article.id }}'><span class="info badge"><i class="fi-x"></i></span></a>
+					{% endif %}
+				</div>
 			{% endfor %}
-		</ul>
 		{% if is_paginated %}
                 {% if page_obj.has_previous %}
                     <a href="/a/a_?page={{ page_obj.previous_page_number }}">previous</a>

@@ -1,0 +1,17 @@
+/* bloc menu */
+
+div.menumargin
+   {
+        margin-bottom: 50px !important;
+   }
+   
+/* bloc contenu articles */
+
+p.categorie {
+    font-size: x-small;
+    color: #5EB6DD
+}
+
+i.red-color {
+    color : red;
+}

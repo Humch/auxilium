@@ -3,16 +3,28 @@
 {% block title %}Liste des articles{% endblock %}
 
 {% block content %}
-	<h2>Articles</h2>
 			{% for article in object_list %}
 				<div class="row">
-					<a href='/a/a_{{ article.id }}'>{{ article.nom }}</a>
-					<a href='/a/a_maj/{{ article.id }}'><span class="info badge"><i class="fi-refresh"></i></span></a>
-					{% if user.is_superuser %}
-						<a href='/a/a_delete/{{ article.id }}'><span class="info badge"><i class="fi-x"></i></span></a>
-					{% endif %}
+					<div class="small-6 columns">
+						<p>
+							<a href='/a/a_{{ article.id }}'>{{ article.nom }}</a> | 
+							<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
+							{% if user.is_superuser %}
+								 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
+							{% endif %}
+						</p>
+					</div>
 				</div>
+				<div class="column row">
+					<p class="categorie">
+						{% for categorie in article.categorie.all %}
+							{{ categorie.nom }} {% if not forloop.last %} | {% endif %} 
+						{% endfor %}
+					</p><hr>
+				</div>
+				
 			{% endfor %}
+
 		{% if is_paginated %}
                 {% if page_obj.has_previous %}
                     <a href="/a/a_?page={{ page_obj.previous_page_number }}">previous</a>

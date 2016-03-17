@@ -141,6 +141,8 @@ def get_article(request, **kwargs):
 @login_required
 def add_to_list(request,**kwargs):
     
-    if request.method == "POST":
+    if request.is_ajax():
+        
+        
         
         pass

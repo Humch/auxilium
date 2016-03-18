@@ -19,8 +19,22 @@ from .models import Article, Liste
 class ArticleList(ListView):
     
     model = Article
-    paginate_by = 25
-    
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super(ArticleList, self).get_context_data(**kwargs)
+        categorie = self.request.GET.get("categorie")
+        context['filtre'] = categorie
+        return context
+
+    def get_queryset(self):
+        queryset = Article.objects.all()
+        if self.request.GET.get("categorie"):
+            queryset = Article.objects.filter(categorie=self.request.GET["categorie"])
+        else:
+            queryset = Article.objects.all()
+        return queryset
+
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ArticleList, self).dispatch(*args, **kwargs)
@@ -142,7 +156,5 @@ def get_article(request, **kwargs):
 def add_to_list(request,**kwargs):
     
     if request.is_ajax():
-        
-        
-        
+
         pass

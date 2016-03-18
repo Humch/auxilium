@@ -18,7 +18,7 @@
 				<div class="column row">
 					<p class="categorie">
 						{% for categorie in article.categorie.all %}
-							{{ categorie.nom }} {% if not forloop.last %} | {% endif %} 
+							<a href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
 						{% endfor %}
 					</p><hr>
 				</div>
@@ -26,15 +26,24 @@
 			{% endfor %}
 
 		{% if is_paginated %}
-                {% if page_obj.has_previous %}
-                    <a href="/a/a_?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-
-                    Page {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-
-                {% if page_obj.has_next %}
-                    <a href="/a/a_?page={{ page_obj.next_page_number }}">next</a>
-                {% endif %}
-				
+			<ul class="pagination text-center" role="navigation" aria-label="Pagination">
+				{% if page_obj.has_previous %}
+					<li class="pagination-previous"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page">Précédent</a></li>
+				{% else %}
+					<li class="pagination-previous disabled">Précédent</li>
+				{% endif %}
+					{% for page in page_obj.paginator.page_range %}
+						{% if page == page_obj.number %}
+							<li class="current">{{ page_obj.number }}</li>
+						{% else %}
+							<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
+						{% endif %}
+					{% endfor %}
+				{% if page_obj.has_next %}
+					<li class="pagination-next"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page">Suivant</a></li>
+				{% else %}
+					<li class="pagination-next disabled">Suivant</li>
+				{% endif %}
+			</ul>		
 		{% endif %}
 {% endblock %}

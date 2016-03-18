@@ -3,13 +3,24 @@
 {% block title %}{{ article.nom }}{% endblock %}
 
 {% block content %}
-	<h2>{{ article.nom }}</h2>
-		<p>{{ article.marque }}</p>
-		<p>{{ article.rayon }}</p>
-		<ul>
+	<div class="row">
+		<div class="small-6 columns">
+			<p>
+				<h4>
+					{{ article.nom }} | 
+					<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
+					{% if user.is_superuser %}
+						 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
+					{% endif %}
+				</h4>
+			</p>
+		</div>
+	</div>
+	<div class="column row">
+		<p>
 			{% for categorie in categorie %}
-			<li>{{ categorie.nom }}</li>
+				<a href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
 			{% endfor %}
-		</ul>
-		
+		</p><hr>
+	</div>
 {% endblock %}

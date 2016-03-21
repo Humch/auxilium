@@ -14,11 +14,31 @@
 							{% endif %}
 						</p>
 					</div>
+					<form method="post" action="/a/add_to_list/">
+						<div class="small-2 columns">
+							<input class="input-group-field" name='quantite' type="number" value="1">
+						</div>
+						<div class="small-3 columns end">
+							{% csrf_token %}
+							<input type='hidden' name='article_id' value='{{ article.id }}' />
+							<div class="input-group">
+								<select name="liste" class="input-group-field">
+									{% for l in liste %}
+										<option value="{{ l.id }}">{{ l.nom }}</option>
+									{% endfor %}
+								</select>
+								<div class="input-group-button">
+									<button type="submit" class="button"><i class="fi-plus"></i></button>
+								</div>
+							</div>
+						
+						</div>
+					</form>
 				</div>
 				<div class="column row">
 					<p class="categorie">
 						{% for categorie in article.categorie.all %}
-							<a href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
+							<a class="categorie" href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
 						{% endfor %}
 					</p><hr>
 				</div>

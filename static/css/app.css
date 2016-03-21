@@ -8,8 +8,12 @@ div.menumargin
 /* bloc contenu articles */
 
 p.categorie {
-    font-size: x-small;
-    color: #5EB6DD
+    font-size: xx-small;
+    color: #5EB6DD;
+}
+
+a.categorie {
+    color: green;
 }
 
 i.red-color {

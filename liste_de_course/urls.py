@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import ArticleList, ArticleDetail, ArticleCreate, ArticleUpdate, ArticleDelete, ListeList, ListeDetail, ListeCreate, ListeUpdate, ListeDelete, get_article
+from .views import ArticleList, ArticleDetail, ArticleCreate, ArticleUpdate, ArticleDelete, ListeList, ListeDetail, ListeCreate, ListeUpdate, ListeDelete, get_article, add_to_list
 
 urlpatterns = [
     url(r'^a_$', ArticleList.as_view(), name='article-list'),
@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^l_maj/(?P<pk>\d+)/$', ListeUpdate.as_view(), name='liste-update'),
     url(r'^l_delete/(?P<pk>\d+)/$', ListeDelete.as_view(), name='liste-delete'),
     url(r'^get_article/', get_article, name='get_article'),
+    url(r'^add_to_list/', add_to_list, name='add_to_list'),
 ]

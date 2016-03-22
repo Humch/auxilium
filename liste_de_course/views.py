@@ -14,7 +14,7 @@ import json
 
 from django.http import HttpResponse
 
-from .models import Article, Liste
+from .models import Article, Liste, Produit
 
 class ArticleList(ListView):
     
@@ -25,6 +25,8 @@ class ArticleList(ListView):
         context = super(ArticleList, self).get_context_data(**kwargs)
         categorie = self.request.GET.get("categorie")
         context['filtre'] = categorie
+        context['liste'] = Liste.objects.filter(archive=False)
+        
         return context
 
     def get_queryset(self):
@@ -152,9 +154,24 @@ def get_article(request, **kwargs):
     
     return HttpResponse(data, mimetype)
 
+
 @login_required
 def add_to_list(request,**kwargs):
     
-    if request.is_ajax():
+    if request.method == 'POST':
 
-        pass
+        a = Article.objects.get(id=request.POST.get("article_id"))
+        p = Produit(nom=a,quantite=request.POST.get("quantite"))
+        p.save()
+        
+        l = Liste.objects.get(id=request.POST.get("liste_id"))
+        
+        l.produit.add(p)
+        
+        html = "<html><body>Blue is dead</body></html>"
+        return HttpResponse(html)
+    
+    else:
+        
+        html = "<html><body>Red is dead</body></html>"
+        return HttpResponse(html)

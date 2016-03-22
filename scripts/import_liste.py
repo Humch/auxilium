@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
 
-import csv
 import sys
 import os
+
+from os import listdir
+
+from os.path import isfile, join
 
 # Ajout des settings Django pour l'import
 
@@ -18,15 +21,25 @@ django.setup()
 
 from liste_de_course.models import Magasin, Rayon, Marque, Categorie, Article, Liste, Produit
 
-with open('data/20160318-Auchan Drive _ confirmation de commande-54287.html') as f:
-    soup = BeautifulSoup(f.read(),'html.parser')
+chemin = 'data'
+
+fichiers = [f for f in listdir(chemin) if isfile(join(chemin, f))]
+
+for fichier in fichiers:
     
-for table in soup.find_all('table',attrs={'class':'deviceWidth tabRayon'}):
+    with open(fichier) as f:
+        soup = BeautifulSoup(f.read(),'html.parser')
+        
+    for table in soup.find_all('table',attrs={'class':'deviceWidth tabRayon'}):
+        
+        rayon = table.find('font',attrs={'style':'text-transform:uppercase'}).contents
+        print(rayon[0])
+        produits = table.find_all('td',attrs={'width':'61%','style':'font-family:Arial, Helvetica, sans-serif; color:#2a2121; font-size:11px; padding-left:10px','class':'designation'})
+        quantites = table.find_all('td',attrs={'width':'12%','style':'font-family:Arial, Helvetica, sans-serif; color:#2a2121; font-size:11px; text-align:center','class':"quantite"})
+        
+        for produit,quantite in zip(produits,quantites):
+            print('-->' + produit.contents[0] + ' : ' + quantite.contents[0])
+            
+if __name__ == '__main__':
     
-    rayon = table.find('font',attrs={'style':'text-transform:uppercase'}).contents
-    print(rayon[0])
-    produits = table.find_all('td',attrs={'width':'61%','style':'font-family:Arial, Helvetica, sans-serif; color:#2a2121; font-size:11px; padding-left:10px','class':'designation'})
-    quantites = table.find_all('td',attrs={'width':'12%','style':'font-family:Arial, Helvetica, sans-serif; color:#2a2121; font-size:11px; text-align:center','class':"quantite"})
-    
-    for produit,quantite in zip(produits,quantites):
-        print('-->' + produit.contents[0] + ' : ' + quantite.contents[0])
+    pass

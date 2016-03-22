@@ -158,7 +158,7 @@ def get_article(request, **kwargs):
 @login_required
 def add_to_list(request,**kwargs):
     
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
 
         a = Article.objects.get(id=request.POST.get("article_id"))
         p = Produit(nom=a,quantite=request.POST.get("quantite"))
@@ -168,10 +168,10 @@ def add_to_list(request,**kwargs):
         
         l.produit.add(p)
         
-        html = "<html><body>Blue is dead</body></html>"
+        html = "Blue is dead"
         return HttpResponse(html)
     
     else:
         
-        html = "<html><body>Red is dead</body></html>"
+        html = "Red is dead"
         return HttpResponse(html)

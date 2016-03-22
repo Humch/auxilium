@@ -19,3 +19,9 @@ a.categorie {
 i.red-color {
     color : red;
 }
+
+i.success {
+     display: none;
+     color: green !important;
+     font-size: large;
+}

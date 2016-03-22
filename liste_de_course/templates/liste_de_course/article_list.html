@@ -3,67 +3,98 @@
 {% block title %}Liste des articles{% endblock %}
 
 {% block content %}
-			{% for article in object_list %}
-				<div class="row">
-					<div class="small-6 columns">
-						<p>
-							<a href='/a/a_{{ article.id }}'>{{ article.nom }}</a> | 
-							<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
-							{% if user.is_superuser %}
-								 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
-							{% endif %}
-						</p>
+	<div class='row'>
+		<div class='small-1 small-offset-11 columns end'>
+			<p>
+				<i class="fi-checkbox success"  id='response'></i>
+			</p>
+		</div>
+	</div>
+	{% for article in object_list %}
+		<div class="row">
+			<div class="small-6 columns">
+				<p>
+					
+					<a href='/a/a_{{ article.id }}'>{{ article.nom }}</a> | 
+					<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
+					{% if user.is_superuser %}
+						 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
+					{% endif %}
+				</p>
+			</div>
+			<form method="post" action="" id="ajout_produit_liste">
+				<div class="small-2 columns">
+					<input class="input-group-field" name='quantite' type="number" value="1">
+				</div>
+				<div class="small-3 columns end">
+					{% csrf_token %}
+					<input type='hidden' name='article_id' value='{{ article.id }}' />
+					<div class="input-group">
+						<select name="liste_id" class="input-group-field">
+							{% for l in liste %}
+								<option value="{{ l.id }}">{{ l.nom }}</option>
+							{% endfor %}
+						</select>
+						<div class="input-group-button">
+							<button type="submit" class="button"><i class="fi-plus"></i></button>
+						</div>
 					</div>
-					<form method="post" action="/a/add_to_list/">
-						<div class="small-2 columns">
-							<input class="input-group-field" name='quantite' type="number" value="1">
-						</div>
-						<div class="small-3 columns end">
-							{% csrf_token %}
-							<input type='hidden' name='article_id' value='{{ article.id }}' />
-							<div class="input-group">
-								<select name="liste_id" class="input-group-field">
-									{% for l in liste %}
-										<option value="{{ l.id }}">{{ l.nom }}</option>
-									{% endfor %}
-								</select>
-								<div class="input-group-button">
-									<button type="submit" class="button"><i class="fi-plus"></i></button>
-								</div>
-							</div>
-						
-						</div>
-					</form>
 				</div>
-				<div class="column row">
-					<p class="categorie">
-						{% for categorie in article.categorie.all %}
-							<a class="categorie" href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
-						{% endfor %}
-					</p><hr>
-				</div>
-				
-			{% endfor %}
+			</form>
+		</div>
+		<div class="column row">
+			<p class="categorie">
+				{% for categorie in article.categorie.all %}
+					<a class="categorie" href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
+				{% endfor %}
+			</p><hr>
+		</div>
+			
+	{% endfor %}
 
-		{% if is_paginated %}
-			<ul class="pagination text-center" role="navigation" aria-label="Pagination">
-				{% if page_obj.has_previous %}
-					<li class="pagination-previous"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page">Précédent</a></li>
-				{% else %}
-					<li class="pagination-previous disabled">Précédent</li>
-				{% endif %}
-					{% for page in page_obj.paginator.page_range %}
-						{% if page == page_obj.number %}
-							<li class="current">{{ page_obj.number }}</li>
-						{% else %}
-							<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
-						{% endif %}
-					{% endfor %}
-				{% if page_obj.has_next %}
-					<li class="pagination-next"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page">Suivant</a></li>
-				{% else %}
-					<li class="pagination-next disabled">Suivant</li>
-				{% endif %}
-			</ul>		
-		{% endif %}
+	{% if is_paginated %}
+		<ul class="pagination text-center" role="navigation" aria-label="Pagination">
+			{% if page_obj.has_previous %}
+				<li class="pagination-previous"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page">Précédent</a></li>
+			{% else %}
+				<li class="pagination-previous disabled">Précédent</li>
+			{% endif %}
+				{% for page in page_obj.paginator.page_range %}
+					{% if page == page_obj.number %}
+						<li class="current">{{ page_obj.number }}</li>
+					{% else %}
+						<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
+					{% endif %}
+				{% endfor %}
+			{% if page_obj.has_next %}
+				<li class="pagination-next"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page">Suivant</a></li>
+			{% else %}
+				<li class="pagination-next disabled">Suivant</li>
+			{% endif %}
+		</ul>		
+	{% endif %}
+
 {% endblock %}
+
+{% block javascript %}
+
+	<script language="JavaScript">
+    $(document).ready(function() {
+        $('#ajout_produit_liste').submit(function() {
+            $.ajax({ 
+                data: $(this).serialize(),
+                type:'POST',
+                url: '/a/add_to_list/',
+//				success:  $(function() {
+//					$("#response").show();
+//					setTimeout(function() {
+//						$("#response").hide();
+//					}, 2000 );
+//				})
+			});
+            return false;
+        });
+    });
+	</script>
+
+{% endblock %}	

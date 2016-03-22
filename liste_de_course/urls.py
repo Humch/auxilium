@@ -13,6 +13,6 @@ urlpatterns = [
     url(r'^l_add/$', ListeCreate.as_view(), name='liste-add'),
     url(r'^l_maj/(?P<pk>\d+)/$', ListeUpdate.as_view(), name='liste-update'),
     url(r'^l_delete/(?P<pk>\d+)/$', ListeDelete.as_view(), name='liste-delete'),
-    url(r'^get_article/', get_article, name='get_article'),
+    url(r'^get_article/', add_to_list, name='get_article'),
     url(r'^add_to_list/', add_to_list, name='add_to_list'),
 ]

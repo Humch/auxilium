@@ -4,11 +4,15 @@ import csv
 import sys
 import os
 
+# Ajout des settings Django pour l'import
+
 sys.path.append('/home/fabien/Projets/auxilium')
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'auxilium.settings_dev'
 
 import django
+
+# setup Django pour intialiser les paramètres
 
 django.setup()
 

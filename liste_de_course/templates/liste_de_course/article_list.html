@@ -22,7 +22,7 @@
 					{% endif %}
 				</p>
 			</div>
-			<form method="post" action="" id="ajout_produit_liste">
+			<form method="post" action="" class="ajout_produit_liste">
 				<div class="small-2 columns">
 					<input class="input-group-field" name='quantite' type="number" value="1">
 				</div>
@@ -79,18 +79,20 @@
 {% block javascript %}
 
 	<script language="JavaScript">
-    $(document).ready(function() {
-        $('#ajout_produit_liste').submit(function() {
+    $(function() {
+        $('.ajout_produit_liste').click(function() {
             $.ajax({ 
                 data: $(this).serialize(),
                 type:'POST',
                 url: '/a/add_to_list/',
-//				success:  $(function() {
-//					$("#response").show();
-//					setTimeout(function() {
-//						$("#response").hide();
-//					}, 2000 );
-//				})
+				dataType : "jsonp",
+				cache: false,
+				success:  $(function(data) {
+					$("#response").show();
+					setTimeout(function() {
+						$("#response").hide();
+					}, 2000 );
+				})
 			});
             return false;
         });

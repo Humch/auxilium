@@ -16,6 +16,8 @@ from django.http import HttpResponse
 
 from .models import Article, Liste, Produit
 
+# Vues concernant les articles (vue,edition,suppression)
+
 class ArticleList(ListView):
     
     model = Article
@@ -81,6 +83,8 @@ class ArticleDelete(DeleteView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ArticleDelete, self).dispatch(*args, **kwargs)
+
+# Vues concernant les listes (vues, edition, suppression)
     
 class ListeList(ListView):
     
@@ -131,6 +135,8 @@ class ListeDelete(DeleteView):
     def dispatch(self, *args, **kwargs):
         return super(ListeDelete, self).dispatch(*args, **kwargs)
     
+# vue ajax autocompletion (barre de recherche)
+    
 @login_required    
 def get_article(request, **kwargs):
     
@@ -154,6 +160,7 @@ def get_article(request, **kwargs):
     
     return HttpResponse(data, mimetype)
 
+# vue ajax permettant d'ajouter un article à une liste
 
 @login_required
 def add_to_list(request,**kwargs):
@@ -168,10 +175,16 @@ def add_to_list(request,**kwargs):
         
         l.produit.add(p)
         
-        html = "Blue is dead"
-        return HttpResponse(html)
+        data = json.dumps('success')
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)
     
     else:
         
-        html = "Red is dead"
-        return HttpResponse(html)
+        data = json.dumps('fail')
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)

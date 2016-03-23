@@ -23,5 +23,5 @@ i.red-color {
 i.success {
      display: none;
      color: green !important;
-     font-size: large;
+     font-size: 36px;
 }

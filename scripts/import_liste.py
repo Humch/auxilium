@@ -25,9 +25,11 @@ chemin = 'data'
 
 fichiers = [f for f in listdir(chemin) if isfile(join(chemin, f))]
 
+print(fichiers)
+
 for fichier in fichiers:
     
-    with open(fichier) as f:
+    with open(join(chemin, fichier)) as f:
         soup = BeautifulSoup(f.read(),'html.parser')
         
     for table in soup.find_all('table',attrs={'class':'deviceWidth tabRayon'}):

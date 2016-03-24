@@ -14,7 +14,7 @@ import json
 
 from django.http import HttpResponse
 
-from .models import Article, Liste, Produit
+from .models import Article, Liste, Produit, Categorie
 
 # Vues concernant les articles (vue,edition,suppression)
 
@@ -24,19 +24,27 @@ class ArticleList(ListView):
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
+        
         context = super(ArticleList, self).get_context_data(**kwargs)
         categorie = self.request.GET.get("categorie")
+        
         context['filtre'] = categorie
-        context['liste'] = Liste.objects.filter(archive=False)
+        
+        # ajout des catégories au contexte pour filtrer les catégories par requete GET
+        context['all_categorie'] = Categorie.objects.all()
+        
+        # ajout des listes actives de l utilisateur au contexte pour l ajout à une liste
+        context['liste'] = Liste.objects.filter(archive=False) 
         
         return context
 
     def get_queryset(self):
-        queryset = Article.objects.all()
+
         if self.request.GET.get("categorie"):
             queryset = Article.objects.filter(categorie=self.request.GET["categorie"])
         else:
             queryset = Article.objects.all()
+        
         return queryset
 
     @method_decorator(login_required)
@@ -53,6 +61,7 @@ class ArticleDetail(DetailView):
         
         context = super(ArticleDetail, self).get_context_data(**kwargs)
         context['categorie'] = context['article'].categorie.all()
+        context['liste'] = Liste.objects.filter(archive=False)
         
         return context
 

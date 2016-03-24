@@ -10,12 +10,19 @@
 			</p>
 		</div>
 	</div>
+	<div class="column row">
+		<p class="categorie">
+				<a class="categorie" href='/a/a_'>Toutes</a> | 
+			{% for categorie in all_categorie %}
+				<a class="categorie" href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
+			{% endfor %}
+		</p>
+	</div>
 	{% for article in object_list %}
 		<div class="row">
 			<div class="small-6 columns">
 				<p>
-					
-					<a href='/a/a_{{ article.id }}'>{{ article.nom }}</a> | 
+					<a href='/a/a_{{ article.id }}'>{{ article.nom|truncatewords:5 }}</a> | 
 					<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
 					{% if user.is_superuser %}
 						 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
@@ -80,7 +87,7 @@
 
 	<script language="JavaScript">
     $(function() {
-        $('.ajout_produit_liste').click(function() {
+        $('.ajout_produit_liste').submit(function() {
             $.ajax({ 
                 data: $(this).serialize(),
                 type:'POST',

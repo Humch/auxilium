@@ -3,18 +3,23 @@
 {% block title %}{{ article.nom }}{% endblock %}
 
 {% block content %}
-	<div class="row">
-		<div class="small-6 columns">
+	<div class='row'>
+		<div class='small-1 small-offset-11 columns end'>
 			<p>
-				<h4>
-					{{ article.nom }} | 
-					<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
-					{% if user.is_superuser %}
-						 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
-					{% endif %}
-				</h4>
+				<i class="fi-checkbox success"  id='response'></i>
 			</p>
 		</div>
+	</div>
+	<div class="column row">
+		<p>
+			<h4>
+				{{ article.nom }} | 
+				<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
+				{% if user.is_superuser %}
+					 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
+				{% endif %}
+			</h4>
+		</p>
 	</div>
 	<div class="column row">
 		<p>
@@ -23,4 +28,51 @@
 			{% endfor %}
 		</p><hr>
 	</div>
+	<div class="row">
+		<form method="post" action="" class="ajout_produit_liste">
+			<div class="small-2 columns">
+				<input class="input-group-field" name='quantite' type="number" value="1">
+			</div>
+			<div class="small-3 columns end">
+				{% csrf_token %}
+				<input type='hidden' name='article_id' value='{{ article.id }}' />
+				<div class="input-group">
+					<select name="liste_id" class="input-group-field">
+						{% for l in liste %}
+							<option value="{{ l.id }}">{{ l.nom }}</option>
+						{% endfor %}
+					</select>
+					<div class="input-group-button">
+						<button type="submit" class="button"><i class="fi-plus"></i></button>
+					</div>
+				</div>
+			</div>
+			</form>
+	</div>
+
 {% endblock %}
+
+{% block javascript %}
+
+	<script language="JavaScript">
+    $(function() {
+        $('.ajout_produit_liste').click(function() {
+            $.ajax({ 
+                data: $(this).serialize(),
+                type:'POST',
+                url: '/a/add_to_list/',
+				dataType : "jsonp",
+				cache: false,
+				success:  $(function(data) {
+					$("#response").show();
+					setTimeout(function() {
+						$("#response").hide();
+					}, 2000 );
+				})
+			});
+            return false;
+        });
+    });
+	</script>
+
+{% endblock %}	

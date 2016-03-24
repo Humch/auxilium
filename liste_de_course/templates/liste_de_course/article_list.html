@@ -62,21 +62,28 @@
 	{% if is_paginated %}
 		<ul class="pagination text-center" role="navigation" aria-label="Pagination">
 			{% if page_obj.has_previous %}
-				<li class="pagination-previous"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page">Précédent</a></li>
+				<li class="pagination-previous"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page"><i class="fi-previous"></i></a></li>
+				<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.paginator.page_range|first }}" aria-label="Page {{ page_obj.paginator.page_range|first }}">{{ page_obj.paginator.page_range|first }}</a></li>
 			{% else %}
-				<li class="pagination-previous disabled">Précédent</li>
+				<li class="pagination-previous disabled"><i class="fi-previous"></i></li>
 			{% endif %}
 				{% for page in page_obj.paginator.page_range %}
 					{% if page == page_obj.number %}
 						<li class="current">{{ page_obj.number }}</li>
+					{% elif page == page_obj.paginator.page_range|first %}
+					{% elif page == page_obj.paginator.page_range|last %}
+					{% elif page == page_obj.number|add:"4" or page == page_obj.number|add:"-4" %}
+						<li class="ellipsis"></li>
+					{% elif page > page_obj.number|add:"4" or page < page_obj.number|add:"-4" %}
 					{% else %}
 						<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
 					{% endif %}
 				{% endfor %}
 			{% if page_obj.has_next %}
-				<li class="pagination-next"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page">Suivant</a></li>
+				<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.paginator.page_range|last }}" aria-label="Page {{ page_obj.paginator.page_range|last }}">{{ page_obj.paginator.page_range|last }}</a></li>
+				<li class="pagination-next"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page"><i class="fi-next"></i></a></li>
 			{% else %}
-				<li class="pagination-next disabled">Suivant</li>
+				<li class="pagination-next disabled"><i class="fi-next"></i></li>
 			{% endif %}
 		</ul>		
 	{% endif %}

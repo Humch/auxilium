@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 class Magasin(models.Model):
     
     nom = models.CharField(max_length=200)
-    logo = models.ImageField(upload_to="/home/fabien/Projets/auxilium/fichiers")
+    logo = models.ImageField()
     
     def __str__(self):
         return self.nom

@@ -26,6 +26,8 @@ class ArticleList(ListView):
     def get_context_data(self, **kwargs):
         
         context = super(ArticleList, self).get_context_data(**kwargs)
+        
+        # ajout de la categorie filtré pour le gérer dans la pagination
         categorie = self.request.GET.get("categorie")
         
         context['filtre'] = categorie
@@ -98,6 +100,12 @@ class ArticleDelete(DeleteView):
 class ListeList(ListView):
     
     model = Liste
+    
+    def get_context_data(self, **kwargs):
+        
+        context = super(ListeList, self).get_context_data(**kwargs)
+        
+        return context
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

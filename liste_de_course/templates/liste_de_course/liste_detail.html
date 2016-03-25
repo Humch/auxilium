@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ liste.nom }}{% endblock %}
+
+{% block content %}
+	<div class="column row">
+		<h4>
+			<span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex="1" title="{{ liste.magasin.nom }}">
+				<img src='{{ MEDIA_URL }}{{ liste.magasin.logo.name }}' width="32" height="32">
+			</span>
+			{{ liste.nom }} | 
+			<a href='/a/l_maj/{{ liste.id }}'><i class="fi-refresh"></i></a>
+			{% if user.is_superuser %}
+				 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
+			{% endif %}
+		</h4>
+	</div>
+	<div class="column row">
+		<table class="hover">
+			<thead>
+				<tr>
+					<th>Produit</th>
+					<th>Quantité</th>
+				</tr>
+			 </thead>
+			<tbody>
+				{% for produit in liste.produit.all %}
+					<tr>
+						<td>{{ produit.nom }}</td>
+						<td>{{ produit.quantite }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		
+	</div>
+{% endblock %}
+	

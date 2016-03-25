@@ -3,12 +3,22 @@
 {% block title %}Listes de course{% endblock %}
 
 {% block content %}
-	<h2>Listes de course</h2>
-		<ul>
-			{% for liste in object_list %}
-			<li>
-				<a href='/a/l_{{ liste.id }}'>{{ liste.nom }}</a> <a href='/a/l_maj/{{ liste.id }}'><span class="info badge"><i class="fi-refresh"></i></span></a> <a href='/a/l_delete/{{ liste.id }}'><span class="info badge"><i class="fi-x"></i></span></a>
-			</li>
-			{% endfor %}
-		</ul>
+	<div>
+		<h2 class="column row">Listes de course</h2>
+		<hr>
+	</div>
+		{% for liste in object_list %}
+			<div class="row">
+				<div class="small-6 columns">
+					<p>
+						<img src='{{ MEDIA_URL }}{{ liste.magasin.logo.name }}' width="32" height="32">
+						<a href='/a/l_{{ liste.id }}'>{{ liste.nom }}</a> | 
+						<a href='/a/l_maj/{{ liste.id }}'><i class="fi-refresh"></i></a>
+						{% if user.is_superuser %}
+							 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
+						{% endif %}
+					</p>
+				</div>
+			</div><hr>
+		{% endfor %}
 {% endblock %}

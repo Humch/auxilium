@@ -24,6 +24,12 @@ from liste_de_course.models import Magasin, Rayon, Marque, Categorie, Article, L
 
 chemin = 'data'
 
+def creer_liste(nom):
+    
+    liste, created = Liste.objects.get_or_create(nom = nom)
+    
+    return liste
+
 def creer_rayon(nom):
     
     rayon, created = Rayon.objects.get_or_create(nom = nom)
@@ -36,7 +42,7 @@ def creer_rayon(nom):
         
         print('rayon existe déjà :  %s' % rayon)
     
-    return created
+    return rayon, created
 
 def creer_categorie(nom):
 
@@ -50,9 +56,9 @@ def creer_categorie(nom):
         
         print('categorie existe déjà :  %s' % categorie)
     
-    return created
+    return categorie, created
 
-def creer_marque():
+def creer_marque(nom):
     
     marque, created = Marque.objects.get_or_create(nom = nom)
                 
@@ -64,11 +70,11 @@ def creer_marque():
         
         print('marque existe déjà :  %s' % marque)
         
-    return created
+    return marque, created
 
-def creer_article():
+def creer_article(nom,rayon,categorie,marque):
     
-    article, created = Article.objects.get_or_create(nom = produit.contents[0], rayon = rayon, marque = marque)
+    article, created = Article.objects.get_or_create(nom = nom, rayon = rayon, marque = marque)
     
     article.categorie.add(categorie)
     
@@ -81,6 +87,17 @@ def creer_article():
     else:
         
         print('existe déjà :  %s' % produit)
+        
+    return article,created
+
+def creer_produit(article,quantite,liste):
+    
+    produit, created = Produit.objects.get_or_create(article = article, quantite = quantite)
+    
+    liste.produit.add(produit)
+    liste.save()
+    
+    return produit, created
         
 
 def import_liste():
@@ -103,6 +120,8 @@ def import_liste():
             produits = table.find_all('td',attrs={'width':'61%','style':'font-family:Arial, Helvetica, sans-serif; color:#2a2121; font-size:11px; padding-left:10px','class':'designation'})
             quantites = table.find_all('td',attrs={'width':'12%','style':'font-family:Arial, Helvetica, sans-serif; color:#2a2121; font-size:11px; text-align:center','class':"quantite"})
             
+            creer_liste()
+            
             for produit,quantite in zip(produits,quantites):
                 
                 print('-->' + produit.contents[0] + ' : ' + quantite.contents[0])
@@ -111,7 +130,11 @@ def import_liste():
                     
                 creer_categorie(tab_rayon[0])
                 
-                creer_marque(produit.contents[0].split(' ', 1)[0])
+                creer_marque(produit.contents[0])
+                
+                creer_article(produit.contents[0],rayon,categorie,marque)
+                
+                creer_produit(article,quantite.contents[0],liste)
     
 if __name__ == '__main__':
     

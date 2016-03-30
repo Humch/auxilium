@@ -22,11 +22,25 @@ django.setup()
 
 from liste_de_course.models import Magasin, Rayon, Marque, Categorie, Article, Liste, Produit
 
+from django.contrib.auth.models import User
+
 chemin = 'data'
 
 def creer_liste(nom):
     
-    liste, created = Liste.objects.get_or_create(nom = nom)
+    proprietaire = User.objects.get(pk=1)
+    
+    magasin = Magasin.objects.get(pk=1)
+    
+    liste, created = Liste.objects.get_or_create(nom = nom, par_defaut = False, active = False, archive = True, propriete_de = proprietaire, magasin = magasin)
+    
+    if created:
+        
+        print('liste ajouté :  %s' % liste)
+    
+    else:
+        
+        print('liste existe déjà :  %s' % liste)
     
     return liste
 
@@ -42,7 +56,7 @@ def creer_rayon(nom):
         
         print('rayon existe déjà :  %s' % rayon)
     
-    return rayon, created
+    return rayon
 
 def creer_categorie(nom):
 
@@ -56,10 +70,21 @@ def creer_categorie(nom):
         
         print('categorie existe déjà :  %s' % categorie)
     
-    return categorie, created
+    return categorie
 
-def creer_marque(nom):
+def creer_marque(nom_article):
     
+    nom = ''
+    for w in nom_article.split(' '):
+        
+        try:
+            if w[0].isupper():
+            
+                nom += w
+            
+        except:
+            pass
+
     marque, created = Marque.objects.get_or_create(nom = nom)
                 
     if created:
@@ -70,34 +95,35 @@ def creer_marque(nom):
         
         print('marque existe déjà :  %s' % marque)
         
-    return marque, created
+    return marque
 
 def creer_article(nom,rayon,categorie,marque):
     
     article, created = Article.objects.get_or_create(nom = nom, rayon = rayon, marque = marque)
-    
-    article.categorie.add(categorie)
-    
-    article.save()
-    
+
     if created:
+        article.categorie.add(categorie)
+    
+        article.save()
         
-        print('article ajouté :  %s' % produit)
+        print('article ajouté :  %s' % article)
     
     else:
         
-        print('existe déjà :  %s' % produit)
+        print('article existe déjà :  %s' % article)
         
-    return article,created
+    return article
 
 def creer_produit(article,quantite,liste):
     
-    produit, created = Produit.objects.get_or_create(article = article, quantite = quantite)
+    print ('%s : %s de %s' % (article,quantite,liste))
+    
+    produit, created = Produit.objects.get_or_create(nom = article, quantite = quantite)
     
     liste.produit.add(produit)
     liste.save()
     
-    return produit, created
+    return produit
         
 
 def import_liste():
@@ -120,19 +146,23 @@ def import_liste():
             produits = table.find_all('td',attrs={'width':'61%','style':'font-family:Arial, Helvetica, sans-serif; color:#2a2121; font-size:11px; padding-left:10px','class':'designation'})
             quantites = table.find_all('td',attrs={'width':'12%','style':'font-family:Arial, Helvetica, sans-serif; color:#2a2121; font-size:11px; text-align:center','class':"quantite"})
             
-            creer_liste()
+            date = soup.find('font',attrs={"style":"color:#de0b1e"}).contents
+            
+            print(date[0])
+            
+            liste  = creer_liste(date[0])
             
             for produit,quantite in zip(produits,quantites):
                 
                 print('-->' + produit.contents[0] + ' : ' + quantite.contents[0])
     
-                creer_rayon(tab_rayon[0])
+                rayon = creer_rayon(tab_rayon[0])
                     
-                creer_categorie(tab_rayon[0])
+                categorie = creer_categorie(tab_rayon[0])
                 
-                creer_marque(produit.contents[0])
+                marque = creer_marque(produit.contents[0])
                 
-                creer_article(produit.contents[0],rayon,categorie,marque)
+                article = creer_article(produit.contents[0],rayon,categorie,marque)
                 
                 creer_produit(article,quantite.contents[0],liste)
     

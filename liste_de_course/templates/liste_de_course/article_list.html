@@ -5,6 +5,7 @@
 {% block content %}
 	<div class='row'>
 		<div class='small-1 small-offset-11 columns end'>
+			
 			<p>
 				<i class="fi-checkbox success"  id='response'></i>
 			</p>
@@ -58,7 +59,7 @@
 		</div>
 			
 	{% endfor %}
-
+<!-- pagination avec filtre des catégories-->
 	{% if is_paginated %}
 		<ul class="pagination text-center" role="navigation" aria-label="Pagination">
 			{% if page_obj.has_previous %}
@@ -87,7 +88,7 @@
 			{% endif %}
 		</ul>		
 	{% endif %}
-
+<!-- fin de la pagination -->
 {% endblock %}
 
 {% block javascript %}

@@ -43,9 +43,9 @@ class ArticleList(ListView):
     def get_queryset(self):
 
         if self.request.GET.get("categorie"):
-            queryset = Article.objects.filter(categorie=self.request.GET["categorie"])
+            queryset = Article.objects.filter(categorie=self.request.GET["categorie"]).order_by('nom')
         else:
-            queryset = Article.objects.all()
+            queryset = Article.objects.all().order_by('nom')
         
         return queryset
 

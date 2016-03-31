@@ -25,3 +25,7 @@ i.success {
      color: green !important;
      font-size: 36px;
 }
+
+i.green-color {
+    color : green;
+}

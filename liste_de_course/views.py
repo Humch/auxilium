@@ -28,9 +28,9 @@ class ArticleList(ListView):
         context = super(ArticleList, self).get_context_data(**kwargs)
         
         # ajout de la categorie filtré pour le gérer dans la pagination
-        categorie = self.request.GET.get("categorie")
         
-        context['filtre'] = categorie
+        context['cat'] = self.request.GET.get("categorie")
+        context['art'] = self.request.GET.get("art")
         
         # ajout des catégories au contexte pour filtrer les catégories par requete GET
         context['all_categorie'] = Categorie.objects.all()
@@ -42,8 +42,15 @@ class ArticleList(ListView):
 
     def get_queryset(self):
 
-        if self.request.GET.get("categorie"):
-            queryset = Article.objects.filter(categorie=self.request.GET["categorie"]).order_by('nom')
+        if self.request.GET.get("categorie") and self.request.GET.get("art"):
+            queryset = Article.objects.filter(nom__icontains = self.request.GET["art"]).filter(categorie = self.request.GET["categorie"]).order_by('nom')
+            
+        elif self.request.GET.get("categorie"):
+            queryset = Article.objects.filter(categorie = self.request.GET["categorie"]).order_by('nom')
+        
+        elif self.request.GET.get("art"):
+            queryset = Article.objects.filter(nom__icontains = self.request.GET["art"]).order_by('nom')
+            
         else:
             queryset = Article.objects.all().order_by('nom')
         
@@ -165,7 +172,6 @@ def get_article(request, **kwargs):
     
         for article in articles:
             article_json = {}
-            article_json['value'] = '/a/%s/' % article.id
             article_json['label'] = '%s' % article.nom
             results.append(article_json)
         data = json.dumps(results)

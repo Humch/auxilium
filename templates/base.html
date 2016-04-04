@@ -63,10 +63,6 @@
 							<a href="{% url 'django.contrib.auth.views.logout' %}"><i class="fi-power menu-i"></i></a>
 						</li>
 					</ul>
-<!--				<form method="post" action="">
-						{% csrf_token %}
-						<input class="input-group-field" type="text" placeholder="Article" id="article" maxlength="254" name="article"/>
-					</form> -->
 				</div>
 			</div>
         {% endblock %}
@@ -80,17 +76,6 @@
 		<script src="/static/js/foundation.js"></script>
 		<script type="text/javascript">
 			$(document).foundation();
-		</script>
-		<script type="text/javascript">
-		$(function() {
-		$("#article").autocomplete({
-			source: "/a/get_article/",
-			minLength: 2,
-			select: function( event, ui ) { 
-            window.location.href = ui.item.value;
-			}
-			});
-		});
 		</script>
 
 	{% block javascript %}

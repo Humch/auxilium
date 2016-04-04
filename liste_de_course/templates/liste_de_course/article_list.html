@@ -5,17 +5,31 @@
 {% block content %}
 	<div class='row'>
 		<div class='small-1 small-offset-11 columns end'>
-			
 			<p>
 				<i class="fi-checkbox success"  id='response'></i>
 			</p>
 		</div>
 	</div>
 	<div class="column row">
+		<div class='small-4 small-offset-8 columns end'>
+			<p>
+		<form method="get" action="">
+			{% if cat %}<input type='hidden' name='categorie' value='{{ cat }}' />{% endif %}
+			<div class="input-group">
+				<input class="input-group-field" type="text" placeholder="Rechercher un article" maxlength="254" name="art"/>
+				<div class="input-group-button">
+				<button type="submit" class="button"><i class="fi-magnifying-glass"></i></button>
+				</div>
+			</div>
+		</form>
+			</p>
+		</div>
+	</div>
+	<div class="column row">
 		<p class="categorie">
-				<a class="categorie" href='/a/a_'>Toutes</a> | 
+				<a class="categorie" href='/a/a_{% if art %}?art={{ art }}{% endif %}'>Toutes</a> | 
 			{% for categorie in all_categorie %}
-				<a class="categorie" href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
+				<a class="categorie" href='/a/a_?{% if art %}art={{ art }}&{% endif %}categorie={{ categorie.id }}'>{{ categorie.nom }}</a>{% if not forloop.last %} | {% endif %}
 			{% endfor %}
 		</p>
 	</div>
@@ -59,12 +73,12 @@
 		</div>
 			
 	{% endfor %}
-<!-- pagination avec filtre des catégories-->
+<!-- pagination avec filtre des catégories et recherche d'articles-->
 	{% if is_paginated %}
 		<ul class="pagination text-center" role="navigation" aria-label="Pagination">
 			{% if page_obj.has_previous %}
-				<li class="pagination-previous"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page"><i class="fi-previous"></i></a></li>
-				<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.paginator.page_range|first }}" aria-label="Page {{ page_obj.paginator.page_range|first }}">{{ page_obj.paginator.page_range|first }}</a></li>
+				<li class="pagination-previous"><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page"><i class="fi-previous"></i></a></li>
+				<li><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.paginator.page_range|first }}" aria-label="Page {{ page_obj.paginator.page_range|first }}">{{ page_obj.paginator.page_range|first }}</a></li>
 			{% else %}
 				<li class="pagination-previous disabled"><i class="fi-previous"></i></li>
 			{% endif %}
@@ -77,12 +91,12 @@
 						<li class="ellipsis"></li>
 					{% elif page > page_obj.number|add:"4" or page < page_obj.number|add:"-4" %}
 					{% else %}
-						<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
+						<li><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
 					{% endif %}
 				{% endfor %}
 			{% if page_obj.has_next %}
-				<li><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.paginator.page_range|last }}" aria-label="Page {{ page_obj.paginator.page_range|last }}">{{ page_obj.paginator.page_range|last }}</a></li>
-				<li class="pagination-next"><a href="/a/a_?{% if filtre %}categorie={{ filtre }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page"><i class="fi-next"></i></a></li>
+				<li><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.paginator.page_range|last }}" aria-label="Page {{ page_obj.paginator.page_range|last }}">{{ page_obj.paginator.page_range|last }}</a></li>
+				<li class="pagination-next"><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page"><i class="fi-next"></i></a></li>
 			{% else %}
 				<li class="pagination-next disabled"><i class="fi-next"></i></li>
 			{% endif %}
@@ -113,5 +127,4 @@
         });
     });
 	</script>
-
 {% endblock %}	

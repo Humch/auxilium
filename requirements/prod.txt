@@ -1,0 +1,4 @@
+-r ./requirements.txt
+
+gunicorn==18.0
+psycopg2==2.5.2

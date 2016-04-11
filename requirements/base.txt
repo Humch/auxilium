@@ -1,5 +1,5 @@
 beautifulsoup4==4.4.1
 bs4==0.0.1
-Django==1.9.4
-Pillow==3.1.1
-sqlparse==0.1.18
+Django==1.9.5
+Pillow==3.2.0
+sqlparse==0.1.19

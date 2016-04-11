@@ -11,7 +11,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class='small-4 columns'>
+		<div class='large-4 columns'>
 		<form method="get" action="">
 			{% if cat %}<input type='hidden' name='categorie' value='{{ cat }}' />{% endif %}
 			<div class="input-group">
@@ -44,7 +44,7 @@
 	</div>
 	{% for article in object_list %}
 		<div class="row">
-			<div class="small-6 columns">
+			<div class="large-6 columns">
 				<p>
 					<a href='/a/a_{{ article.id }}'>{{ article.nom|truncatewords:5 }}</a> | 
 					<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
@@ -54,10 +54,10 @@
 				</p>
 			</div>
 			<form method="post" action="" class="ajout_produit_liste">
-				<div class="small-2 columns">
+				<div class="large-2 columns">
 					<input class="input-group-field" name='quantite' type="number" value="1">
 				</div>
-				<div class="small-3 columns end">
+				<div class="large-3 columns end">
 					{% csrf_token %}
 					<input type='hidden' name='article_id' value='{{ article.id }}' />
 					<div class="input-group">

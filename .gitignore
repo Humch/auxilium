@@ -1,0 +1,6 @@
+db.sqlite3
+*.pyc
+auxilium/settings*
+*/migrations/*
+fichiers/*
+scripts/data/*

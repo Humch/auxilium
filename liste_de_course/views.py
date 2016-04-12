@@ -137,7 +137,7 @@ class ListeDetail(DetailView):
     
 class ListeCreate(CreateView):
     model = Liste
-    fields = ['nom','par_defaut','active','archive','magasin']
+    fields = ['nom','par_defaut','active','archive','magasin','propriete_de']
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

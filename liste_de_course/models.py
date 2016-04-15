@@ -71,8 +71,8 @@ class Liste(models.Model):
     
     nom = models.CharField(max_length=200)
     produit = models.ManyToManyField(Produit, blank=True)
-    date_creation = models.DateTimeField(auto_now_add=True)
-    date_modification = models.DateTimeField(auto_now=True)
+    date_creation_liste = models.DateTimeField(auto_now_add=True)
+    date_modification_liste = models.DateTimeField(auto_now=True)
     active = models.BooleanField()
     archive = models.BooleanField()
     propriete_de = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proprietaire')

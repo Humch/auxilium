@@ -107,6 +107,7 @@ class ArticleDelete(DeleteView):
 class ListeList(ListView):
     
     model = Liste
+    queryset = Liste.objects.all().order_by('-date_creation_liste','-date_modification_liste')
     
     def get_context_data(self, **kwargs):
         

@@ -153,7 +153,7 @@ class ListeUpdate(UpdateView):
     
 class ListeDelete(DeleteView):
     model = Article
-    success_url = reverse_lazy('article-list')
+    success_url = reverse_lazy('liste-list')
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

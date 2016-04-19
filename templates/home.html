@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class='column row'>
+	<p> </p>
+</div>
+
+<div class="row">
+	<div class="small-12 medium-6 large-4 columns">
+		<div class="callout">
+			<h5>Listes actives</h5>
+			{% for liste in listes_actives %}
+				<p>
+					<span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex="1" title="{{ liste.magasin.nom }}">
+						<img src='{{ MEDIA_URL }}{{ liste.magasin.logo.name }}' width="32" height="32">
+					</span>
+					<a href='/a/l_{{ liste.id }}'>{{ liste.nom }}</a> | 
+					<a href='/a/l_maj/{{ liste.id }}'><i class="fi-refresh"></i></a>
+					{% if user.is_superuser %}
+						 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
+					{% endif %}
+					{% if liste.archive %}
+					| <i class="fi-shopping-cart green-color"></i>
+					{% endif %}
+				</p>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="small-12 medium-6 large-4 columns">
+		<div class="callout">
+		</div>
+	</div>
+	<div class="small-12 medium-6 large-4 columns">
+		<div class="callout">
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

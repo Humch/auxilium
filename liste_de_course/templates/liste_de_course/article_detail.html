@@ -31,10 +31,10 @@
 	</div>
 	<div class="row">
 		<form method="post" action="" class="ajout_produit_liste">
-			<div class="small-2 columns">
+			<div class="small-3 medium-2 columns">
 				<input class="input-group-field" name='quantite' type="number" value="1">
 			</div>
-			<div class="small-3 columns end">
+			<div class="small-9 large-3 columns end">
 				{% csrf_token %}
 				<input type='hidden' name='article_id' value='{{ article.id }}' />
 				<div class="input-group">
@@ -57,7 +57,7 @@
 
 	<script language="JavaScript">
     $(function() {
-        $('.ajout_produit_liste').click(function() {
+        $('.ajout_produit_liste').submit(function() {
             $.ajax({ 
                 data: $(this).serialize(),
                 type:'POST',
@@ -75,5 +75,5 @@
         });
     });
 	</script>
-
-{% endblock %}	
+	
+{% endblock %}

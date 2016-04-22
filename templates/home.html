@@ -10,7 +10,7 @@
 		<div class="callout">
 			<h5>Listes actives</h5>
 			{% for liste in listes_actives %}
-				<p>
+				<p class="inline_display">
 					<span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex="1" title="{{ liste.magasin.nom }}">
 						<img src='{{ MEDIA_URL }}{{ liste.magasin.logo.name }}' width="32" height="32">
 					</span>
@@ -20,7 +20,13 @@
 						 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
 					{% endif %}
 					{% if liste.archive %}
-					| <i class="fi-shopping-cart green-color"></i>
+						| <i class="fi-shopping-cart green-color"></i>
+					{% else %}
+						| <form method="post" action="" class="archive_list inline_display">
+							{% csrf_token %}
+							<input type='hidden' name='liste_id' value='{{ liste.id }}' />
+							<button type="submit"><i id="liste_{{ liste.id }}" class="fi-shopping-cart green-empty"></i></button>
+						</form>
 					{% endif %}
 				</p>
 			{% endfor %}
@@ -53,6 +59,25 @@
         /* Whatever other code you want here */
 }
 		});
+	</script>
+	
+	<script language="JavaScript">
+    $(function() {
+        $('.archive_list').submit(function() {
+            $.ajax({ 
+                data: $(this).serialize(),
+                type:'POST',
+                url: '/a/archive_list/',
+				dataType : "json",
+				cache: false,
+				success:  function(data) {
+					console.log(data);
+					$("#liste_" + data).removeClass("green-empty").addClass("green-color");
+				}
+			});
+            return false;
+        });
+    });
 	</script>
 
 {% endblock %}

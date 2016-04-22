@@ -47,3 +47,19 @@ i.green-color {
     color : green;
 }
 
+i.green-empty {
+    color : white;
+    text-shadow: 1px 0 0 green, -1px 0 0 green, 0 1px 0 green, 0 -1px 0 green, 1px 1px green, -1px -1px 0 green, 1px -1px 0 green, -1px 1px 0 green;
+}
+
+i.green-empty:hover {
+    color : green;
+    text-shadow : none;
+}
+
+.inline_display {
+    display:inline;
+    margin:0;
+    padding:0;
+}
+

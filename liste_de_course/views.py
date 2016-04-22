@@ -214,3 +214,29 @@ def add_to_list(request,**kwargs):
         mimetype = 'application/json'
     
         return HttpResponse(data, mimetype)
+    
+# formulaire d'archivage de liste
+
+def archive_list(request,**kwargs):
+    
+    if request.method == 'POST' and request.is_ajax():
+        liste = Liste.objects.get(id=request.POST.get("liste_id"))
+        liste.active = False
+        liste.archive = True
+        liste.save()
+        
+        results = {}
+        results['listeid'] = request.POST.get("liste_id")
+        data = json.dumps(request.POST.get("liste_id"))
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)
+    
+    else:
+        
+        data = json.dumps('fail')
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)

@@ -168,12 +168,14 @@ def get_article(request, **kwargs):
     if request.is_ajax():
     
         q = request.GET.get('term', '')
-        articles = Article.objects.filter(nom__icontains = q )[:20]
+        articles = Article.objects.filter(nom__icontains = q )[:10]
         results = []
     
         for article in articles:
             article_json = {}
             article_json['label'] = '%s' % article.nom
+            article_json['id'] = '%s' % article.id
+            article_json['value'] = '%s' % article.nom
             results.append(article_json)
         data = json.dumps(results)
     
@@ -200,6 +202,32 @@ def add_to_list(request,**kwargs):
         l.produit.add(p)
         
         data = json.dumps('success')
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)
+    
+    else:
+        
+        data = json.dumps('fail')
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)
+    
+# formulaire d'archivage de liste
+
+def archive_list(request,**kwargs):
+    
+    if request.method == 'POST' and request.is_ajax():
+        liste = Liste.objects.get(id=request.POST.get("liste_id"))
+        liste.active = False
+        liste.archive = True
+        liste.save()
+        
+        results = {}
+        results['listeid'] = request.POST.get("liste_id")
+        data = json.dumps(request.POST.get("liste_id"))
     
         mimetype = 'application/json'
     

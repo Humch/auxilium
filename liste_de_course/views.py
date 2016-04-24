@@ -221,13 +221,25 @@ def archive_list(request,**kwargs):
     
     if request.method == 'POST' and request.is_ajax():
         liste = Liste.objects.get(id=request.POST.get("liste_id"))
-        liste.active = False
-        liste.archive = True
-        liste.save()
         
         results = {}
+        
+        if liste.active:
+            
+            liste.active = False
+            liste.archive = True
+            liste.save()
+            results['state'] = 'archive'
+         
+        elif not liste.active:
+            
+            liste.active = True
+            liste.archive = False
+            liste.save()
+            results['state'] = 'active'
+        
         results['listeid'] = request.POST.get("liste_id")
-        data = json.dumps(request.POST.get("liste_id"))
+        data = json.dumps(results)
     
         mimetype = 'application/json'
     

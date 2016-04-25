@@ -61,7 +61,7 @@
 		});
 	</script>
 	
-	<script language="JavaScript">
+	<script type="text/javascript">
     $(function() {
         $('.archive_list').submit(function() {
             $.ajax({ 
@@ -71,8 +71,13 @@
 				dataType : "json",
 				cache: false,
 				success:  function(data) {
-					console.log(data);
-					$("#liste_" + data).removeClass("green-empty").addClass("green-color");
+					console.log(data.listeid);
+					if (data.state == "archive") {
+						$("#liste_" + data.listeid).removeClass("green-empty").addClass("green-color");
+                    }
+					else if (data.state == "active") {
+                        $("#liste_" + data.listeid).removeClass("green-color").addClass("green-empty");
+                    }
 				}
 			});
             return false;

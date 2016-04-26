@@ -63,3 +63,6 @@ i.green-empty:hover {
     padding:0;
 }
 
+.display_for_success {
+     display: none;
+     }

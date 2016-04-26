@@ -2,7 +2,7 @@ html
     { 
         background-attachment: fixed !important;
         background-clip: border-box !important;
-        background-image: url("/static/css/img/bg.jpg") !important;
+        background-image: url("/static/css/images/bg.jpg") !important;
         background-origin: padding-box !important;
         background-position: center center !important;
         background-repeat: no-repeat !important;

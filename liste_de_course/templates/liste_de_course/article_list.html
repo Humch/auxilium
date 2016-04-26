@@ -116,24 +116,24 @@
 {% block javascript %}
 
 	<script language="JavaScript">
-    $(function() {
-        $('.ajout_produit_liste').submit(function() {
-            $.ajax({ 
-                data: $(this).serialize(),
-                type:'POST',
-                url: '/a/add_to_list/',
-				dataType : "jsonp",
-				cache: false,
-				success:  $(function(data) {
-					$("#response").show();
-					setTimeout(function() {
-						$("#response").hide();
-					}, 2000 );
-				})
+		$(function() {
+			$('.ajout_produit_liste').submit(function() {
+				$.ajax({ 
+					data: $(this).serialize(),
+					type:'POST',
+					url: '/a/add_to_list/',
+					dataType : "jsonp",
+					cache: false,
+					success:  $(function(data) {
+						$("#response").show();
+						setTimeout(function() {
+							$("#response").hide();
+						}, 2000 );
+					})
+				});
+				return false;
 			});
-            return false;
-        });
-    });
+		});
 	</script>
 
 {% endblock %}	

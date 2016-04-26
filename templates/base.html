@@ -29,30 +29,21 @@
 		{% block menu %}
 			<div class="top-bar menumargin">
 				<div class="top-bar-left">
-					<ul class="dropdown menu" data-dropdown-menu>
+					<ul class="menu">
 						<li>
 							<a href="/">Home</a>
 						</li>
 						<li>
 							<a href="/a/a_">Articles</a>
-								<ul class="menu">
-									<li>
-										<a href="/a/a_add/">Ajouter</a>
-									</li>
-								</ul>
 						</li>
 						<li>
 							<a href="/a/l_">Listes</a>
-								<ul class="menu">
-									<li>
-										<a href="/a/l_add/">Ajouter</a>
-									</li>
-								</ul>
+
 						</li>
 					</ul>
 				</div>
 				<div class="top-bar-right">
-					<ul class="dropdown menu" data-dropdown-menu>
+					<ul class="menu">
 						<li>
 							Bonjour, {{ request.user }}
 						</li>

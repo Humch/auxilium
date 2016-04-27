@@ -27,29 +27,33 @@
 
     <body>
 		{% block menu %}
-			<div class="top-bar menumargin">
+			<div class="title-bar" data-responsive-toggle="auxilium_menu" data-hide-for="medium">
+				<button class="menu-icon" type="button" data-toggle></button>
+				<div class="title-bar-title">Auxilium</div>
+			</div>
+			<div class="top-bar menumargin" id="auxilium_menu">
 				<div class="top-bar-left">
 					<ul class="menu">
 						<li>
-							<a href="/">Home</a>
+							<a href="/"><span class="show-for-medium">Home</span><span class="show-for-small-only"><i class="fi-home"></i></span></a>
 						</li>
 						<li>
-							<a href="/a/a_">Articles</a>
+							<a href="/a/a_"><span class="show-for-medium">Articles</span><span class="show-for-small-only"><i class="fi-annotate"></i></span></a>
 						</li>
 						<li>
-							<a href="/a/l_">Listes</a>
+							<a href="/a/l_"><span class="show-for-medium">Listes</span><span class="show-for-small-only"><i class="fi-clipboard-notes"></i></span></a>
 
 						</li>
 					</ul>
 				</div>
 				<div class="top-bar-right">
 					<ul class="menu">
-						<li>
-							Bonjour, {{ request.user }}
-						</li>
+<!--						<li>
+							{{ request.user }}
+						</li>-->
 						{% if user.is_superuser %}
 							<li>
-								<a href="/admin/">Admin</a>
+								<a href="/admin/"><span class="show-for-medium">Admin</span><span class="show-for-small-only"><i class="fi-torso-business"></i></span></a>
 							</li>
 						{% endif %}
 						<li class="li-menu">

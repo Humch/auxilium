@@ -1,3 +1,19 @@
+/* prevent FOUC issues */
+
+.no-js .top-bar {
+  display: none;
+}
+
+@media screen and (min-width: 40em) {
+  .no-js .top-bar {
+    display: block;
+  }
+
+  .no-js .title-bar {
+    display: none;
+  }
+}
+
 /* bloc contenu articles */
 
 p.categorie {
@@ -66,3 +82,8 @@ i.green-empty:hover {
 .display_for_success {
      display: none;
      }
+
+.no-js .top-bar {
+  display: none;
+}
+

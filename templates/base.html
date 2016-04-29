@@ -27,21 +27,38 @@
 
     <body>
 		{% block menu %}
-			<div class="title-bar" data-responsive-toggle="auxilium_menu" data-hide-for="medium">
-				<button class="menu-icon" type="button" data-toggle></button>
-				<div class="title-bar-title">Auxilium</div>
+			<div class="top-bar hide-for-medium">
+				<ul class="menu">
+					<li>
+						<a href="/"><i class="fi-home"></i></a>
+					</li>
+					<li>
+						<a href="/a/a_"><i class="fi-annotate"></i></a>
+					</li>
+					<li>
+						<a href="/a/l_"><i class="fi-clipboard-notes"></i></a>
+					</li>
+					{% if user.is_superuser %}
+						<li>
+							<a href="/admin/"><i class="fi-torso-business"></i></a>
+						</li>
+					{% endif %}
+					<li class="li-menu">
+						<a href="{% url 'django.contrib.auth.views.logout' %}"><i class="fi-power menu-i"></i></a>
+					</li>
+				</ul>
 			</div>
-			<div class="top-bar menumargin" id="auxilium_menu">
+			<div class="top-bar menumargin show-for-medium">
 				<div class="top-bar-left">
 					<ul class="menu">
 						<li>
-							<a href="/"><span class="show-for-medium">Home</span><span class="show-for-small-only"><i class="fi-home"></i></span></a>
+							<a href="/"><i class="fi-home"></i> Home</a>
 						</li>
 						<li>
-							<a href="/a/a_"><span class="show-for-medium">Articles</span><span class="show-for-small-only"><i class="fi-annotate"></i></span></a>
+							<a href="/a/a_"><i class="fi-annotate"></i> Articles</a>
 						</li>
 						<li>
-							<a href="/a/l_"><span class="show-for-medium">Listes</span><span class="show-for-small-only"><i class="fi-clipboard-notes"></i></span></a>
+							<a href="/a/l_"><i class="fi-clipboard-notes"></i> Listes</a>
 
 						</li>
 					</ul>
@@ -53,7 +70,7 @@
 						</li>-->
 						{% if user.is_superuser %}
 							<li>
-								<a href="/admin/"><span class="show-for-medium">Admin</span><span class="show-for-small-only"><i class="fi-torso-business"></i></span></a>
+								<a href="/admin/"><i class="fi-torso-business"></i> Admin</a>
 							</li>
 						{% endif %}
 						<li class="li-menu">

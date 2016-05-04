@@ -10,6 +10,18 @@
   }
 }
 
+/* bloc menu bottom margin */
+
+div.menumargin{
+  margin-bottom: 10px;
+}
+
+/* bloc reveal top margin */
+
+div.margin-top{
+  margin-top: 30px;
+}
+
 /* bloc contenu articles */
 
 p.categorie {

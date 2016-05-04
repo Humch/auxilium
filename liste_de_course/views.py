@@ -153,7 +153,7 @@ class ListeUpdate(UpdateView):
         return super(ListeUpdate, self).dispatch(*args, **kwargs)
     
 class ListeDelete(DeleteView):
-    model = Article
+    model = Liste
     success_url = reverse_lazy('liste-list')
 
     @method_decorator(login_required)

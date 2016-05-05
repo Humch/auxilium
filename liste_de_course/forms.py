@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, ModelChoiceField, ModelMultipleChoiceField
+from django.forms import ModelForm, TextInput, ModelChoiceField, ModelMultipleChoiceField, Select
 
 from .models import Article, Rayon, Marque, Categorie, Liste, Magasin
 
@@ -6,21 +6,20 @@ class ArticleCreateForm(ModelForm):
     
     rayon = ModelChoiceField(
                 queryset = Rayon.objects.all(),
-                required = True,
                 empty_label='Choix du rayon',
-                label = ''
+                label = '',
+                widget = Select(attrs={'required':True})
             )
     
     marque = ModelChoiceField(
-                required = True,
                 queryset = Marque.objects.all(),
                 empty_label="Marque de l'article",
-                label = ''
+                label = '',
+                widget = Select(attrs={'required':True})
             )
 
     categorie = ModelMultipleChoiceField(
-                queryset = Categorie.objects.all(),
-                required = True
+                queryset = Categorie.objects.all()
             )
     
     
@@ -39,9 +38,9 @@ class ArticleCreateForm(ModelForm):
 class ListeCreateForm(ModelForm):
     magasin = ModelChoiceField(
                 queryset = Magasin.objects.all(),
-                required = True,
                 empty_label='Choix du magasin',
-                label = ''
+                label = '',
+                widget = Select(attrs={'required':True})
             )
     
     class Meta:

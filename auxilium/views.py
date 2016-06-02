@@ -63,7 +63,7 @@ def create_liste(request, **kwargs):
         liste = Liste(nom = request.POST.get("nom"),magasin = Magasin.objects.get(pk = request.POST.get("magasin")),propriete_de = request.user,active=True,archive=False)
         liste.save()
         
-        data = json.dumps('success')
+        data = json.dumps(liste.nom)
     
         mimetype = 'application/json'
     

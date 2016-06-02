@@ -115,6 +115,7 @@
 						setTimeout(function() {
 							$("#response_article").hide();
 						}, 4000 );
+						document.getElementById('ajout_article').reset();
 					},
 					error : function(xhr) {
 						$("#error_create_article").show();
@@ -145,6 +146,7 @@
 						setTimeout(function() {
 							$("#response_liste").hide();
 						}, 4000 );
+						document.getElementById('ajout_liste').reset();
 					},
 					error : function(xhr) {
 						$("#error_create_liste").show();

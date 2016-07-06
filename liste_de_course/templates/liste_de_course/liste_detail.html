@@ -13,6 +13,15 @@
 			{% if user.is_superuser %}
 				 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
 			{% endif %}
+			{% if liste.archive %}
+				| <i class="fi-shopping-cart green-color"></i>
+				{% else %}
+					| <form method="post" action="" class="archive_list inline_display">
+						{% csrf_token %}
+						<input type='hidden' name='liste_id' value='{{ liste.id }}' />
+						<button type="submit"><i id="liste_{{ liste.id }}" class="fi-shopping-cart green-empty"></i></button>
+					</form>
+				{% endif %}
 		</h4>
 	</div>
 	<div class="column row">
@@ -36,4 +45,28 @@
 		
 	</div>
 {% endblock %}
-	
+
+{% block javascript %}
+	<script type="text/javascript">
+    $(function() {
+        $('.archive_list').submit(function() {
+            $.ajax({ 
+                data: $(this).serialize(),
+                type:'POST',
+                url: '/a/archive_list/',
+				dataType : "json",
+				cache: false,
+				success:  function(data) {
+					if (data.state == "archive") {
+						$("#liste_" + data.listeid).removeClass("green-empty").addClass("green-color");
+                    }
+					else if (data.state == "active") {
+                        $("#liste_" + data.listeid).removeClass("green-color").addClass("green-empty");
+                    }
+				}
+			});
+            return false;
+        });
+    });
+	</script>		
+{% endblock %}

@@ -1,5 +1,7 @@
 from django.forms import ModelForm, TextInput, ModelChoiceField, ModelMultipleChoiceField, Select
 
+from django import forms
+
 from .models import Article, Rayon, Marque, Categorie, Liste, Magasin
 
 class ArticleCreateForm(ModelForm):
@@ -54,3 +56,8 @@ class ListeCreateForm(ModelForm):
                 attrs = {'required': True, 'placeholder': 'Nom de la liste'}
             )
         }
+
+class AddArticleToListForm(forms.Form):
+    
+    nom = forms.CharField(label='', max_length=100,widget=forms.TextInput(attrs={'placeholder': "Nom de l'article"}))
+    quantite = forms.IntegerField()

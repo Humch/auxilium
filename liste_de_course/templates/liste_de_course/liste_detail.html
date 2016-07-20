@@ -24,25 +24,45 @@
 				{% endif %}
 		</h4>
 	</div>
-	<div class="column row">
-		<table class="hover">
-			<thead>
-				<tr>
-					<th>Produit</th>
-					<th>Quantité</th>
-				</tr>
-			 </thead>
-			<tbody>
-				{% for produit in liste.produit.all %}
+	{% if liste.produit.all %}
+		<div class="column row">
+			<table class="hover">
+				<thead>
 					<tr>
-						<td>{{ produit.nom }}</td>
-						<td>{{ produit.quantite }}</td>
+						<th>Produit</th>
+						<th>Quantité</th>
 					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-
-		
+				 </thead>
+				<tbody>
+					{% for produit in liste.produit.all %}
+						<tr>
+							<td>{{ produit.nom }}</td>
+							<td>{{ produit.quantite }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% endif %}
+	<div class="column row">
+					<p class="text-center"><a class="button" data-open="ModalAddArticle">Ajouter un article <i class="fi-plus"></i></a></p>
+			<div class="reveal" id="ModalAddArticle" data-reveal>
+				<div class="success callout display_for_success" data-closable id="response_article">
+					<p>l'article <span id="retour_article"></span> a été ajouté à la liste</p>
+				</div>
+				<div class="alert callout display_for_success" data-closable id="error_create_article">
+					<p class="text-center"><i class="fi-alert red-color"></i> Erreur - l'article n'a pas été ajouté<i class="fi-alert red-color"></i></p>
+				</div>
+				<div class="column row margin-top">
+					<form action="" method="post" id="ajout_article_liste">
+						{% csrf_token %}
+						{{ addarticle2list.as_p }}
+						<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
+					</form>
+				</div>
+				<button class="close-button" data-close aria-label="Close modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
 	</div>
 {% endblock %}
 

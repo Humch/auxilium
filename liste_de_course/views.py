@@ -16,6 +16,8 @@ from django.http import HttpResponse
 
 from .models import Article, Liste, Produit, Categorie
 
+from .forms import AddArticleToListForm
+
 # Vues concernant les articles (vue,edition,suppression)
 
 class ArticleList(ListView):
@@ -129,6 +131,7 @@ class ListeDetail(DetailView):
         
         context = super(ListeDetail, self).get_context_data(**kwargs)
         context['produit'] = context['liste'].produit.all()
+        context['addarticle2list'] = AddArticleToListForm()
         
         return context
 

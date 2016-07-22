@@ -59,5 +59,5 @@ class ListeCreateForm(ModelForm):
 
 class AddArticleToListForm(forms.Form):
     
-    nom = forms.CharField(label='', max_length=100,widget=forms.TextInput(attrs={'placeholder': "Nom de l'article"}))
-    quantite = forms.IntegerField()
+    article = forms.CharField(label='', max_length=100,widget=forms.TextInput(attrs={'placeholder': "Nom de l'article",'id':'article'}))
+    quantite = forms.IntegerField(label='',widget=forms.NumberInput(attrs={'placeholder': "Quantité",'required':True}))

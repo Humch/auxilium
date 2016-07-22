@@ -47,15 +47,17 @@
 	<div class="column row">
 					<p class="text-center"><a class="button" data-open="ModalAddArticle">Ajouter un article <i class="fi-plus"></i></a></p>
 			<div class="reveal" id="ModalAddArticle" data-reveal>
-				<div class="success callout display_for_success" data-closable id="response_article">
+				<div class="success callout display_for_success" data-closable id="response">
 					<p>l'article <span id="retour_article"></span> a été ajouté à la liste</p>
 				</div>
-				<div class="alert callout display_for_success" data-closable id="error_create_article">
+				<div class="alert callout display_for_success" data-closable id="error_create">
 					<p class="text-center"><i class="fi-alert red-color"></i> Erreur - l'article n'a pas été ajouté<i class="fi-alert red-color"></i></p>
 				</div>
 				<div class="column row margin-top">
 					<form action="" method="post" id="ajout_article_liste">
 						{% csrf_token %}
+						<input type='hidden' name='liste_id' value='{{ liste.id }}' />
+						<input type='hidden' id='article_id' name='article_id' value='' />
 						{{ addarticle2list.as_p }}
 						<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
 					</form>
@@ -88,5 +90,41 @@
             return false;
         });
     });
-	</script>		
+	</script>
+	
+	<script type="text/javascript">
+		$(function() {
+			$('#ajout_article_liste').submit(function() {
+				$.ajax({ 
+					data: $(this).serialize(),
+					type:'POST',
+					url: '/a/add_to_list/',
+					dataType : "jsonp",
+					cache: false,
+					success:  $(function() {
+						$("#response").show();
+						setTimeout(function() {
+							$("#response").hide();
+							$("#ModalAddArticle").foundation('close');
+						}, 2000 );
+						
+					})
+				});
+				return false;
+			});
+		});
+	</script>
+	
+	<script type="text/javascript">
+        $(function() {
+            $("#article").autocomplete({
+                source: "/a/get_article/",
+                minLength: 4,
+				select:function(e,u){ 
+                $("#article").text(u.item.label);
+                $("#article_id").val(u.item.id);
+				}
+            });
+        });
+</script>
 {% endblock %}

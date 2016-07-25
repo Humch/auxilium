@@ -189,7 +189,7 @@ def get_article(request, **kwargs):
     
     return HttpResponse(data, mimetype)
 
-# vue ajax permettant d'ajouter un article à une liste
+# AJAX - ajoute un article à une liste
 
 @login_required
 def add_to_list(request,**kwargs):
@@ -220,6 +220,7 @@ def add_to_list(request,**kwargs):
     
 # formulaire d'archivage de liste
 
+@login_required
 def archive_list(request,**kwargs):
     
     if request.method == 'POST' and request.is_ajax():
@@ -242,6 +243,68 @@ def archive_list(request,**kwargs):
             results['state'] = 'active'
         
         results['listeid'] = request.POST.get("liste_id")
+        data = json.dumps(results)
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)
+    
+    else:
+        
+        data = json.dumps('fail')
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)
+
+# AJAX - permet de modifier la quantité d'un produit sur une liste
+
+@login_required
+def modify_product_quantity(request,**kwargs):
+    
+    if request.method == 'POST' and request.is_ajax():
+
+        produit = Produit.objects.get(id=request.POST.get("produit_id"))
+        results = {}
+        
+        if request.POST.get("action") == "add":
+            
+            produit.quantite = produit.quantite + 1
+            
+            produit.save()
+            
+            results['state'] = 'updated'
+            results['quantite'] = str(produit.quantite)
+            results['produit_id'] = produit.id
+            
+        elif request.POST.get("action") == "soustract":
+            
+            if produit.quantite > 1:
+            
+                produit.quantite = produit.quantite - 1
+            
+                produit.save()
+                
+                results['state'] = 'updated'
+                results['quantite'] = str(produit.quantite)
+                results['produit_id'] = produit.id
+            
+            else:
+                
+                results['produit_id'] = produit.id
+                
+                produit.delete()
+                
+                results['state'] = 'deleted'
+                
+        else:
+        
+            data = json.dumps('fail')
+    
+            mimetype = 'application/json'
+    
+            return HttpResponse(data, mimetype)
+        
         data = json.dumps(results)
     
         mimetype = 'application/json'

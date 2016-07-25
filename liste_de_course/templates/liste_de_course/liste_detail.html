@@ -25,8 +25,8 @@
 		</h4>
 	</div>
 	{% if liste.produit.all %}
-		<div class="column row">
-			<table class="hover">
+		<div id="table_produit" class="column row">
+			<table class="hover stack">
 				<thead>
 					<tr>
 						<th>Produit</th>
@@ -35,37 +35,51 @@
 				 </thead>
 				<tbody>
 					{% for produit in liste.produit.all %}
-						<tr>
+						<tr id="produit_{{produit.id}}">
 							<td>{{ produit.nom }}</td>
-							<td>{{ produit.quantite }}</td>
+							<td>
+								<div class="small button-group">
+									{% if liste.active %}
+										<button type="button" class="pil-left button" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
+										<button type="button" class="hollow button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
+										<button type="button" class="pil-right button" onClick="modifyQuantity('add',{{ produit.id }})"><i class="fi-plus"></i></button>
+									{% else %}
+										<button type="button" class="disabled pil-left button"><i class="fi-minus"></i></button>
+										<button type="button" class="hollow button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
+										<button type="button" class="disabled pil-right button"><i class="fi-plus"></i></button>
+									{% endif %}
+								</div>
+							</td>
 						</tr>
 					{% endfor %}
 				</tbody>
 			</table>
 		</div>
 	{% endif %}
-	<div class="column row">
-					<p class="text-center"><a class="button" data-open="ModalAddArticle">Ajouter un article <i class="fi-plus"></i></a></p>
-			<div class="reveal" id="ModalAddArticle" data-reveal>
-				<div class="success callout display_for_success" data-closable id="response">
-					<p>l'article <span id="retour_article"></span> a été ajouté à la liste</p>
-				</div>
-				<div class="alert callout display_for_success" data-closable id="error_create">
-					<p class="text-center"><i class="fi-alert red-color"></i> Erreur - l'article n'a pas été ajouté<i class="fi-alert red-color"></i></p>
-				</div>
-				<div class="column row margin-top">
-					<form action="" method="post" id="ajout_article_liste">
-						{% csrf_token %}
-						<input type='hidden' name='liste_id' value='{{ liste.id }}' />
-						<input type='hidden' id='article_id' name='article_id' value='' />
-						{{ addarticle2list.as_p }}
-						<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
-					</form>
-				</div>
-				<button class="close-button" data-close aria-label="Close modal" type="button">
-					<span aria-hidden="true">&times;</span>
-				</button>
-	</div>
+	{% if liste.active %}
+		<div class="column row">
+						<p class="text-center"><a class="button" data-open="ModalAddArticle">Ajouter un article <i class="fi-plus"></i></a></p>
+				<div class="reveal" id="ModalAddArticle" data-reveal>
+					<div class="success callout display_for_success" data-closable id="response">
+						<p>l'article <span id="retour_article"></span> a été ajouté à la liste</p>
+					</div>
+					<div class="alert callout display_for_success" data-closable id="error_create">
+						<p class="text-center"><i class="fi-alert red-color"></i> Erreur - l'article n'a pas été ajouté<i class="fi-alert red-color"></i></p>
+					</div>
+					<div class="column row margin-top">
+						<form action="" method="post" id="ajout_article_liste">
+							{% csrf_token %}
+							<input type='hidden' name='liste_id' value='{{ liste.id }}' />
+							<input type='hidden' id='article_id' name='article_id' value='' />
+							{{ addarticle2list.as_p }}
+							<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
+						</form>
+					</div>
+					<button class="close-button" data-close aria-label="Close modal" type="button">
+						<span aria-hidden="true">&times;</span>
+					</button>
+		</div>
+	{% endif %}
 {% endblock %}
 
 {% block javascript %}
@@ -107,7 +121,7 @@
 							$("#response").hide();
 							$("#ModalAddArticle").foundation('close');
 						}, 2000 );
-						
+						location.reload();
 					})
 				});
 				return false;
@@ -126,5 +140,46 @@
 				}
             });
         });
-</script>
+	</script>
+	
+	<script type="text/javascript">
+	// récupérer le cookie CSRF Token pour les requêtes AJAX
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+				// Does this cookie string begin with the name we want?
+				if (cookie.substring(0, name.length + 1) === (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+	
+	var csrftoken = getCookie('csrftoken');
+	</script>
+	
+	<script type="text/javascript">
+		function modifyQuantity(action,produit_id,csrftoken){
+				$.ajax({
+					url:'/a/modify_product_quantity/',
+					data: {action: action, produit_id : produit_id, csrfmiddlewaretoken : window.csrftoken},
+					dataType: "json",
+					type: 'POST',
+					success: function(result) {
+						if (result.state == "updated") {
+							$("#quantite_" + result.produit_id).html(result.quantite);
+						}
+						else if (result.state == "deleted") {
+							$("#produit_" + result.produit_id).remove();
+						}
+					}
+				});
+		}
+	</script>
+
 {% endblock %}

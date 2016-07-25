@@ -98,3 +98,11 @@ button.radius, .button.radius {
 button.round, .button.round {
     border-radius: 1000px;
     }
+
+button.pil-left {
+  border-radius: 50px 0px 0px 50px;
+}
+
+button.pil-right {
+  border-radius: 0px 50px 50px 0px ;
+}

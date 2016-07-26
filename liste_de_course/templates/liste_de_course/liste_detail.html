@@ -14,14 +14,18 @@
 				 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
 			{% endif %}
 			{% if liste.archive %}
-				| <i class="fi-shopping-cart green-color"></i>
-				{% else %}
-					| <form method="post" action="" class="archive_list inline_display">
-						{% csrf_token %}
-						<input type='hidden' name='liste_id' value='{{ liste.id }}' />
-						<button type="submit"><i id="liste_{{ liste.id }}" class="fi-shopping-cart green-empty"></i></button>
-					</form>
-				{% endif %}
+				| <form method="post" action="" class="archive_list inline_display">
+					{% csrf_token %}
+					<input type='hidden' name='liste_id' value='{{ liste.id }}' />
+					<button type="submit"><i id="liste_{{ liste.id }}" class="fi-shopping-cart green-color"></i></button>
+				</form>
+			{% else %}
+				| <form method="post" action="" class="archive_list inline_display">
+					{% csrf_token %}
+					<input type='hidden' name='liste_id' value='{{ liste.id }}' />
+					<button type="submit"><i id="liste_{{ liste.id }}" class="fi-shopping-cart green-empty"></i></button>
+				</form>
+			{% endif %}
 		</h4>
 	</div>
 	{% if liste.produit.all %}
@@ -41,11 +45,11 @@
 								<div class="small button-group">
 									{% if liste.active %}
 										<button type="button" class="pil-left button" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
-										<button type="button" class="hollow button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
+										<button type="button" class="button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
 										<button type="button" class="pil-right button" onClick="modifyQuantity('add',{{ produit.id }})"><i class="fi-plus"></i></button>
 									{% else %}
 										<button type="button" class="disabled pil-left button"><i class="fi-minus"></i></button>
-										<button type="button" class="hollow button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
+										<button type="button" class="button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
 										<button type="button" class="disabled pil-right button"><i class="fi-plus"></i></button>
 									{% endif %}
 								</div>

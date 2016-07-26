@@ -16,7 +16,7 @@ from django.http import HttpResponse
 
 from .models import Article, Liste, Produit, Categorie
 
-from .forms import AddArticleToListForm
+from .forms import AddArticleToListForm, ListeCreateForm
 
 # Vues concernant les articles (vue,edition,suppression)
 
@@ -114,6 +114,7 @@ class ListeList(ListView):
     def get_context_data(self, **kwargs):
         
         context = super(ListeList, self).get_context_data(**kwargs)
+        context['form_liste'] = ListeCreateForm()
         
         return context
     

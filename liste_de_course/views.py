@@ -15,7 +15,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 
 import json
 
-from .models import Article, Liste, Produit, Categorie
+from .models import Article, Liste, Produit, Categorie, Rayon
 
 from .forms import AddArticleToListForm, ListeCreateForm
 
@@ -60,10 +60,12 @@ class ArticleList(ListView):
         # ajout de la categorie filtré pour le gérer dans la pagination
         
         context['cat'] = self.request.GET.get("categorie")
+        context['ray'] = self.request.GET.get("rayon")
         context['art'] = self.request.GET.get("art")
         
         # ajout des catégories au contexte pour filtrer les catégories par requete GET
         context['all_categorie'] = Categorie.objects.all()
+        context['all_rayon'] = Rayon.objects.all()
         
         # ajout des listes actives de l utilisateur au contexte pour l ajout à une liste
         context['liste'] = Liste.objects.filter(archive=False) 
@@ -71,18 +73,29 @@ class ArticleList(ListView):
         return context
 
     def get_queryset(self):
-
-        if self.request.GET.get("categorie") and self.request.GET.get("art"):
-            queryset = Article.objects.filter(nom__icontains = self.request.GET["art"]).filter(categorie = self.request.GET["categorie"]).order_by('nom')
-            
-        elif self.request.GET.get("categorie"):
-            queryset = Article.objects.filter(categorie = self.request.GET["categorie"]).order_by('nom')
         
-        elif self.request.GET.get("art"):
-            queryset = Article.objects.filter(nom__icontains = self.request.GET["art"]).order_by('nom')
+        queryset = Article.objects.all().order_by('nom')
+        
+#        if self.request.GET.get("categorie") or self.request.GET.get("art"):
+#            queryset = Article.objects.filter(nom__icontains = self.request.GET["art"]).filter(categorie = self.request.GET["categorie"]).order_by('nom')
             
-        else:
-            queryset = Article.objects.all().order_by('nom')
+#        elif self.request.GET.get("categorie"):
+#            queryset = Article.objects.filter(categorie = self.request.GET["categorie"]).order_by('nom')
+        
+#        elif self.request.GET.get("art"):
+#            queryset = Article.objects.filter(nom__icontains = self.request.GET["art"]).order_by('nom')
+
+        if self.request.GET.get("categorie"):
+            queryset = queryset.filter(categorie = self.request.GET["categorie"])
+        
+        if self.request.GET.get("art"):
+            queryset = queryset.filter(nom__icontains = self.request.GET["art"])
+        
+        if self.request.GET.get("rayon"):
+            queryset = queryset.filter(categorie = self.request.GET["rayon"])
+
+#        else:
+#            queryset = Article.objects.all().order_by('nom')
         
         return queryset
 

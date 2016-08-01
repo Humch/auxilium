@@ -26,9 +26,26 @@
     </head>
 
     <body>
+	<div class="off-canvas-wrapper">
+    <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+      <div class="off-canvas position-left black-color" id="offCanvas" data-off-canvas>
+		{% block off-canvas-content %}
+			
+		{% endblock %}
+		<!-- Close button -->
+        <button class="close-button" aria-label="Close menu" type="button" data-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+	  </div>
+	  <div class="off-canvas-content" data-off-canvas-content>
 		{% block menu %}
 			<div class="top-bar hide-for-medium menumargin">
 				<ul class="menu">
+					{% block menu-off-canvas-small %}
+						<li>
+							<a data-toggle="offCanvas"><i class="fi-list"></i></a>
+						</li>
+					{% endblock %}
 					<li>
 						<a href="/"><i class="fi-home"></i></a>
 					</li>
@@ -51,14 +68,19 @@
 			<div class="top-bar menumargin show-for-medium">
 				<div class="top-bar-left">
 					<ul class="menu">
+						{% block menu-off-canvas-medium %}
+							<li>
+								<a data-toggle="offCanvas"><i class="fi-list"></i></a>
+							</li>
+						{% endblock %}
 						<li>
-							<a href="/"><i class="fi-home"></i> Home</a>
+							<a href="/"><i class="fi-home"></i> <span>Home</span></a>
 						</li>
 						<li>
-							<a href="/a/a_"><i class="fi-annotate"></i> Articles</a>
+							<a href="/a/a_"><i class="fi-annotate"></i> <span>Articles</span></a>
 						</li>
 						<li>
-							<a href="/a/l_"><i class="fi-clipboard-notes"></i> Listes</a>
+							<a href="/a/l_"><i class="fi-clipboard-notes"></i> <span>Listes</span></a>
 
 						</li>
 					</ul>
@@ -95,6 +117,9 @@
 	{% block javascript %}
 		
 	{% endblock %}
+	</div>
+    </div>
+  </div>
     </body>
     
 </html>

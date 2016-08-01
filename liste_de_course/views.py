@@ -9,14 +9,42 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from django.core.urlresolvers import reverse_lazy
+from django.core.exceptions import ObjectDoesNotExist
+
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 
 import json
-
-from django.http import HttpResponse
 
 from .models import Article, Liste, Produit, Categorie
 
 from .forms import AddArticleToListForm, ListeCreateForm
+
+# Mixin pour la gestion des formulaires envoyés par AJAX --> issu du site Django https://docs.djangoproject.com/fr/1.9/topics/class-based-views/generic-editing/
+
+class AjaxableResponseMixin(object):
+    """
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def form_invalid(self, form):
+        response = super(AjaxableResponseMixin, self).form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        # We make sure to call the parent's form_valid() method because
+        # it might do some processing (in the case of CreateView, it will
+        # call form.save() for example).
+        response = super(AjaxableResponseMixin, self).form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'pk': self.object.pk,
+            }
+            return JsonResponse(data)
+        else:
+            return response
 
 # Vues concernant les articles (vue,edition,suppression)
 
@@ -148,13 +176,23 @@ class ListeCreate(CreateView):
     def dispatch(self, *args, **kwargs):
         return super(ListeCreate, self).dispatch(*args, **kwargs)
     
-class ListeUpdate(UpdateView):
+class ListeUpdate(AjaxableResponseMixin, UpdateView):
     model = Liste
-    fields = ['nom','active','archive','magasin','propriete_de']
+    fields = ['nom','magasin']
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ListeUpdate, self).dispatch(*args, **kwargs)
+
+class ListeForListUpdate(AjaxableResponseMixin, UpdateView):
+    model = Liste
+    fields = ['nom','magasin']
+    template_name='liste_de_course/liste_l_form.html'
+    success_url = reverse_lazy('liste-list')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ListeForListUpdate, self).dispatch(*args, **kwargs)
     
 class ListeDelete(DeleteView):
     model = Liste
@@ -196,14 +234,31 @@ def get_article(request, **kwargs):
 def add_to_list(request,**kwargs):
     
     if request.method == 'POST' and request.is_ajax():
-
-        a = Article.objects.get(id=request.POST.get("article_id"))
-        p = Produit(nom=a,quantite=request.POST.get("quantite"))
-        p.save()
         
-        l = Liste.objects.get(id=request.POST.get("liste_id"))
+        try:
+            
+            a = Article.objects.get(id=request.POST.get("article_id"))
         
-        l.produit.add(p)
+        except ObjectDoesNotExist:
+        
+            return HttpResponseBadRequest()
+        
+        try:
+            
+            p =  Produit.objects.filter(liste=request.POST.get("liste_id")).get(nom__id=request.POST.get("article_id"))
+         
+        except ObjectDoesNotExist:
+            
+            p = Produit(nom=a,quantite=request.POST.get("quantite"))
+            p.save()
+            l = Liste.objects.get(id=request.POST.get("liste_id"))
+            l.produit.add(p)
+            
+        else:
+            
+            p =  Produit.objects.filter(liste=request.POST.get("liste_id")).get(nom__id=request.POST.get("article_id"))
+            p.quantite = p.quantite + int(request.POST.get("quantite"))
+            p.save()
         
         data = json.dumps('success')
     
@@ -217,7 +272,7 @@ def add_to_list(request,**kwargs):
     
         mimetype = 'application/json'
     
-        return HttpResponse(data, mimetype)
+        return HttpResponseBadRequest(data, mimetype)
     
 # formulaire d'archivage de liste
 
@@ -280,8 +335,6 @@ def modify_product_quantity(request,**kwargs):
             
         elif request.POST.get("action") == "soustract":
             
-            if produit.quantite > 1:
-            
                 produit.quantite = produit.quantite - 1
             
                 produit.save()
@@ -290,7 +343,7 @@ def modify_product_quantity(request,**kwargs):
                 results['quantite'] = str(produit.quantite)
                 results['produit_id'] = produit.id
             
-            else:
+        elif request.POST.get("action") == "delete":
                 
                 results['produit_id'] = produit.id
                 
@@ -304,7 +357,7 @@ def modify_product_quantity(request,**kwargs):
     
             mimetype = 'application/json'
     
-            return HttpResponse(data, mimetype)
+            return HttpResponseBadRequest(data, mimetype)
         
         data = json.dumps(results)
     
@@ -318,4 +371,4 @@ def modify_product_quantity(request,**kwargs):
     
         mimetype = 'application/json'
     
-        return HttpResponse(data, mimetype)
+        return HttpResponseBadRequest(data, mimetype)

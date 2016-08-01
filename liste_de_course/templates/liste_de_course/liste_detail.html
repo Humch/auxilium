@@ -9,9 +9,9 @@
 				<img src='{{ MEDIA_URL }}{{ liste.magasin.logo.name }}' width="32" height="32">
 			</span>
 			{{ liste.nom }} | 
-			<a href='/a/l_maj/{{ liste.id }}'><i class="fi-refresh"></i></a>
+			<button onClick="updateListe({{ liste.id }})"><i class="fi-pencil blue-color"></i></button>
 			{% if user.is_superuser %}
-				 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
+				 | <button onClick="deleteListe()"><i class="fi-x red-color"></i></button>
 			{% endif %}
 			{% if liste.archive %}
 				| <form method="post" action="" class="archive_list inline_display">
@@ -30,7 +30,7 @@
 	</div>
 	{% if liste.produit.all %}
 		<div id="table_produit" class="column row">
-			<table class="hover stack">
+			<table class="hover stack_small">
 				<thead>
 					<tr>
 						<th>Produit</th>
@@ -39,18 +39,33 @@
 				 </thead>
 				<tbody>
 					{% for produit in liste.produit.all %}
+						<div class="reveal" id="reveal_delete_produit_{{produit.id}}" data-reveal>
+							<p>Voulez vous vraiment supprimer {{ produit.nom }} de la liste ?</p>
+							<p class="text-center"><button class='button' onClick="modifyQuantity('delete',{{ produit.id }})">Oui, je le veux</button></p>
+							<button class="close-button" data-close aria-label="Close modal" type="button">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
 						<tr id="produit_{{produit.id}}">
-							<td>{{ produit.nom }}</td>
+							<td>
+								{{ produit.nom }}
+							</td>
 							<td>
 								<div class="small button-group">
 									{% if liste.active %}
-										<button type="button" class="pil-left button" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
+										{% if produit.quantite == 1.0  %}
+											<button type="button" class="pill-left button hide" id="minus_produit_{{produit.id}}" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
+											<button type="button" id="delete_produit_{{produit.id}}" data-open="reveal_delete_produit_{{produit.id}}" class="alert pill-left button"><i class="fi-x"></i></button>
+										{% else %}
+											<button type="button" class="pill-left button" id="minus_produit_{{produit.id}}" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
+											<button type="button" id="delete_produit_{{produit.id}}" data-open="reveal_delete_produit_{{produit.id}}" class="alert pill-left button hide"><i class="fi-x"></i></button>
+										{% endif %}
 										<button type="button" class="button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
-										<button type="button" class="pil-right button" onClick="modifyQuantity('add',{{ produit.id }})"><i class="fi-plus"></i></button>
+										<button type="button" class="pill-right button" onClick="modifyQuantity('add',{{ produit.id }})"><i class="fi-plus"></i></button>
 									{% else %}
-										<button type="button" class="disabled pil-left button"><i class="fi-minus"></i></button>
+										<button type="button" class="disabled pill-left button"><i class="fi-minus"></i></button>
 										<button type="button" class="button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
-										<button type="button" class="disabled pil-right button"><i class="fi-plus"></i></button>
+										<button type="button" class="disabled pill-right button"><i class="fi-plus"></i></button>
 									{% endif %}
 								</div>
 							</td>
@@ -64,17 +79,17 @@
 		<div class="column row">
 						<p class="text-center"><a class="button" data-open="ModalAddArticle">Ajouter un article <i class="fi-plus"></i></a></p>
 				<div class="reveal" id="ModalAddArticle" data-reveal>
-					<div class="success callout display_for_success" data-closable id="response">
-						<p>l'article <span id="retour_article"></span> a été ajouté à la liste</p>
+					<div hidden class="success callout" id="success_add_to_list">
+						<p>l'article a été ajouté à la liste</p>
 					</div>
-					<div class="alert callout display_for_success" data-closable id="error_create">
-						<p class="text-center"><i class="fi-alert red-color"></i> Erreur - l'article n'a pas été ajouté<i class="fi-alert red-color"></i></p>
+					<div hidden class="alert callout" id="error_add_to_list">
+						<p>l'article n'est pas ajouté à la liste</p>
 					</div>
 					<div class="column row margin-top">
 						<form action="" method="post" id="ajout_article_liste">
 							{% csrf_token %}
 							<input type='hidden' name='liste_id' value='{{ liste.id }}' />
-							<input type='hidden' id='article_id' name='article_id' value='' />
+							<input type='hidden' id='article_id' name='article_id' value='-1' />
 							{{ addarticle2list.as_p }}
 							<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
 						</form>
@@ -84,6 +99,10 @@
 					</button>
 		</div>
 	{% endif %}
+	<div class="reveal" id="ListeUpdate" data-reveal>
+	</div>
+		<div class="reveal" id="ListeDelete" data-reveal>
+	</div>
 {% endblock %}
 
 {% block javascript %}
@@ -117,16 +136,22 @@
 					data: $(this).serialize(),
 					type:'POST',
 					url: '/a/add_to_list/',
-					dataType : "jsonp",
+					dataType: "json",
 					cache: false,
-					success:  $(function() {
-						$("#response").show();
+					success:  function() {
+						$("#success_add_to_list").show();
 						setTimeout(function() {
-							$("#response").hide();
+							$("#success_add_to_list").hide();
 							$("#ModalAddArticle").foundation('close');
 						}, 2000 );
 						location.reload();
-					})
+					},
+					error: function(){
+						$("#error_add_to_list").show();
+						setTimeout(function() {
+							$("#error_add_to_list").hide();
+						}, 2000 );	
+					}
 				});
 				return false;
 			});
@@ -177,13 +202,40 @@
 					success: function(result) {
 						if (result.state == "updated") {
 							$("#quantite_" + result.produit_id).html(result.quantite);
+							if (result.quantite === "1.0") {
+								$("#delete_produit_" + result.produit_id).removeClass("hide");
+								$("#minus_produit_" + result.produit_id).addClass("hide");
+							}
+							else{
+								$("#delete_produit_" + result.produit_id).addClass("hide");
+								$("#minus_produit_" + result.produit_id).removeClass("hide");
+							}
 						}
 						else if (result.state == "deleted") {
 							$("#produit_" + result.produit_id).remove();
+							$("#reveal_delete_produit_" + result.produit_id).foundation('close');
 						}
 					}
 				});
 		}
 	</script>
-
+	
+	<script type="text/javascript">
+		function updateListe($idListe) {
+			$.ajax('/a/l_maj/' + $idListe + '/')
+			.done(function(resp){
+				$("#ListeUpdate").html(resp).foundation('open');
+			});
+		}
+	</script>
+	
+	<script type="text/javascript">
+		function deleteListe() {
+			$.ajax('/a/l_delete/{{ liste.id }}/')
+			.done(function(resp){
+				$("#ListeDelete").html(resp).foundation('open');
+			});
+		}
+	</script>
+	
 {% endblock %}

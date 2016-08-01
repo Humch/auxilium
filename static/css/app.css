@@ -71,6 +71,10 @@ i.green-color {
     color : green;
 }
 
+i.blue-color {
+    color : #2199e8;
+}
+
 i.green-empty {
     color : white;
     text-shadow: 1px 0 0 green, -1px 0 0 green, 0 1px 0 green, 0 -1px 0 green, 1px 1px green, -1px -1px 0 green, 1px -1px 0 green, -1px 1px 0 green;
@@ -99,10 +103,29 @@ button.round, .button.round {
     border-radius: 1000px;
     }
 
-button.pil-left {
+button.pill-left {
   border-radius: 50px 0px 0px 50px;
 }
 
-button.pil-right {
+button.pill-right {
   border-radius: 0px 50px 50px 0px ;
 }
+
+button.hide {
+  display: none;
+}
+
+/* identique à la fonction stack pour les tableaux dans foundation */
+/* mais pour les écrans taille small */
+
+@media screen and (max-width: 39.9375em) {
+  table.stack_small thead {
+    display: none; }
+  table.stack_small tfoot {
+    display: none; }
+  table.stack_small tr,
+  table.stack_small th,
+  table.stack_small td {
+    display: block; }
+  table.stack_small td {
+    border-top: 0; } }

@@ -68,22 +68,18 @@ class ArticleList(ListView):
         context['all_rayon'] = Rayon.objects.all()
         
         # ajout des listes actives de l utilisateur au contexte pour l ajout à une liste
-        context['liste'] = Liste.objects.filter(archive=False) 
+        context['liste'] = Liste.objects.filter(archive=False)
+        
+        # ajout du rayon pour afficher son nom si il ya un filtrage par rayon
+        if self.request.GET.get("rayon"):
+        
+            context['rayon_id'] = Rayon.objects.get(id=self.request.GET.get("rayon"))
         
         return context
 
     def get_queryset(self):
         
         queryset = Article.objects.all().order_by('nom')
-        
-#        if self.request.GET.get("categorie") or self.request.GET.get("art"):
-#            queryset = Article.objects.filter(nom__icontains = self.request.GET["art"]).filter(categorie = self.request.GET["categorie"]).order_by('nom')
-            
-#        elif self.request.GET.get("categorie"):
-#            queryset = Article.objects.filter(categorie = self.request.GET["categorie"]).order_by('nom')
-        
-#        elif self.request.GET.get("art"):
-#            queryset = Article.objects.filter(nom__icontains = self.request.GET["art"]).order_by('nom')
 
         if self.request.GET.get("categorie"):
             queryset = queryset.filter(categorie = self.request.GET["categorie"])
@@ -92,10 +88,7 @@ class ArticleList(ListView):
             queryset = queryset.filter(nom__icontains = self.request.GET["art"])
         
         if self.request.GET.get("rayon"):
-            queryset = queryset.filter(categorie = self.request.GET["rayon"])
-
-#        else:
-#            queryset = Article.objects.all().order_by('nom')
+            queryset = queryset.filter(rayon = self.request.GET["rayon"])
         
         return queryset
 

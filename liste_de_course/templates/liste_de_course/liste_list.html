@@ -1,29 +1,140 @@
 {% extends "base.html" %}
 
-{% block title %}Listes de course{% endblock %}
+{% block title %}Listes de courses{% endblock %}
+
+{% block menu-off-canvas-small %}
+{% endblock %}
+{% block menu-off-canvas-medium %}
+{% endblock %}
 
 {% block content %}
 	<div>
-		<h2 class="column row">Listes de course</h2>
+		<h2 class="column row">Listes de courses <a class="button" data-open="ModalCreateListe">Créer une liste <i class="fi-plus"></i></a></h2>
+			<div class="reveal" id="ModalCreateListe" data-reveal>
+				<div class="success callout display_for_success" data-closable id="response_liste">
+					<p class="text-center">la liste <span id="retour_liste"></span> a été ajouté à la base de données</p>
+				</div>
+				<div class="alert callout display_for_success" data-closable id="error_create_liste">
+					<p class="text-center"><i class="fi-alert red-color"></i> Erreur - la liste n'a pas été créé <i class="fi-alert red-color"></i></p>
+				</div>
+				<div class="column row margin-top">
+					<form action="" method="post" id="ajout_liste">
+						{% csrf_token %}
+						{{ form_liste.as_p }}
+						<p class="text-center"><input type="submit" class="button" value="Créer une liste"></p>
+					</form>
+				</div>
+				<button class="close-button" data-close aria-label="Close modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
 		<hr>
 	</div>
 		{% for liste in object_list %}
 			<div class="row">
 				<div class="large-6 columns">
-					<p>
+					<p class="inline_display">
 						<span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex="1" title="{{ liste.magasin.nom }}">
 							<img src='{{ MEDIA_URL }}{{ liste.magasin.logo.name }}' width="32" height="32">
 						</span>
 						<a href='/a/l_{{ liste.id }}'>{{ liste.nom }}</a> | 
-						<a href='/a/l_maj/{{ liste.id }}'><i class="fi-refresh"></i></a>
+						<button onClick="updateListe({{ liste.id }})"><i class="fi-pencil blue-color"></i></button>
 						{% if user.is_superuser %}
-							 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
+							 | <button onClick="deleteListe({{ liste.id }})"><i class="fi-x red-color"></i></button>
 						{% endif %}
 						{% if liste.archive %}
-						| <i class="fi-shopping-cart green-color"></i>
+						| <form method="post" action="" class="archive_list inline_display">
+							{% csrf_token %}
+							<input type='hidden' name='liste_id' value='{{ liste.id }}' />
+							<button type="submit"><i id="liste_{{ liste.id }}" class="fi-shopping-cart green-color"></i></button>
+						</form>
+						{% else %}
+						| <form method="post" action="" class="archive_list inline_display">
+							{% csrf_token %}
+							<input type='hidden' name='liste_id' value='{{ liste.id }}' />
+							<button type="submit"><i id="liste_{{ liste.id }}" class="fi-shopping-cart green-empty"></i></button>
+						</form>
 						{% endif %}
 					</p>
 				</div>
 			</div><hr>
 		{% endfor %}
+	<div class="reveal" id="ListeUpdate" data-reveal>
+	</div>
+	<div class="reveal" id="ListeDelete" data-reveal>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<script type="text/javascript">
+    $(function() {
+        $('.archive_list').submit(function() {
+            $.ajax({ 
+                data: $(this).serialize(),
+                type:'POST',
+                url: '/a/archive_list/',
+				dataType : "json",
+				cache: false,
+				success:  function(data) {
+					if (data.state == "archive") {
+						$("#liste_" + data.listeid).removeClass("green-empty").addClass("green-color");
+                    }
+					else if (data.state == "active") {
+                        $("#liste_" + data.listeid).removeClass("green-color").addClass("green-empty");
+                    }
+				}
+			});
+            return false;
+        });
+    });
+	</script>
+	
+	<script language="JavaScript">
+		$(function() {
+			$('#ajout_liste').submit(function() {
+				$.ajax({ 
+					data: $(this).serialize(),
+					type:'POST',
+					url: '/create_liste/',
+					dataType : "json",
+					cache: false,
+					success:  function(data) {
+						console.log(data);
+						document.getElementById("retour_liste").innerHTML = data;
+						$("#response_liste").show();
+						setTimeout(function() {
+							$("#response_liste").hide();
+						}, 4000 );
+						document.getElementById('ajout_liste').reset();
+					},
+					error : function(xhr) {
+						$("#error_create_liste").show();
+						console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+						setTimeout(function() {
+							$("#error_create_liste").hide();
+						}, 4000 );
+					}
+				});
+				return false;
+			});
+		});
+	</script>
+	
+	<script type="text/javascript">
+		function updateListe($idListe) {
+			$.ajax('/a/l_maj_l/' + $idListe + '/')
+			.done(function(resp){
+				$("#ListeUpdate").html(resp).foundation('open');
+			});
+		}
+	</script>
+	
+	<script type="text/javascript">
+		function deleteListe($idListe) {
+			$.ajax('/a/l_delete/' + $idListe + '/')
+  .done(function(resp){
+    $("#ListeDelete").html(resp).foundation('open');
+});
+		}
+	</script>
 {% endblock %}

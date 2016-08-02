@@ -35,8 +35,8 @@ class Categorie(models.Model):
 class Article(models.Model):
     
     nom = models.CharField(max_length=200)
-    date_creation = models.DateTimeField(auto_now_add=True)
-    date_modification = models.DateTimeField(auto_now=True)
+    date_creation = models.DateTimeField(auto_now_add = True)
+    date_modification = models.DateTimeField(auto_now = True)
     rayon = models.ForeignKey(Rayon, on_delete=models.CASCADE)
     marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
     categorie = models.ManyToManyField(Categorie)
@@ -83,4 +83,4 @@ class Liste(models.Model):
         return self.nom
     
     def get_absolute_url(self):
-        return reverse('liste-list')
+        return reverse('liste-detail', kwargs={'pk': self.pk})

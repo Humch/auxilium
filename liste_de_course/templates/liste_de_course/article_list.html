@@ -2,6 +2,15 @@
 
 {% block title %}Liste des articles{% endblock %}
 
+{% block off-canvas-content %}
+	<ul class="menu vertical">
+<li class="menu-text white-color">Rayons</li>
+{% for rayon in all_rayon %}
+<li><a class="secondary button" href='/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}rayon={{ rayon.id }}'>{{ rayon.nom }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}
+
 {% block content %}
 	<div class='row'>
 		<div class='small-1 small-offset-11 columns end'>
@@ -14,6 +23,7 @@
 		<div class='medium-4 columns'>
 		<form method="get" action="">
 			{% if cat %}<input type='hidden' name='categorie' value='{{ cat }}' />{% endif %}
+			{% if ray %}<input type='hidden' name='rayon' value='{{ ray }}' />{% endif %}
 			<div class="input-group">
 				<input class="input-group-field" type="text" placeholder="Rechercher un article" maxlength="254" name="art"/>
 				<div class="input-group-button">
@@ -24,19 +34,24 @@
 		</div>
 		{% if art %}
 			<div class='small-4 columns end'>
-				<a type="button" class="alert button" href='/a/a_?{% if cat %}categorie={{ cat }}{% endif %}'>Recherche : {{ art }} <i class="fi-x"></i></a>
+				<a type="button" class="alert button" href='/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if ray %}rayon={{ ray }}{% endif %}'>Recherche : {{ art }} <i class="fi-x"></i></a>
+			{% if not ray %}</div>{% endif %}
+		{% endif %}
+		{% if ray %}
+			{% if not art %}<div class='small-4 columns end'>{% endif %}
+				<a type="button" class="alert button" href='/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}{% endif %}'>Rayon : {{ rayon_id.nom }} <i class="fi-x"></i></a>
 			</div>
 		{% endif %}
 	</div>
 	<div class="column row">
 		<p class="categorie">
-				<a class="categorie" href='/a/a_{% if art %}?art={{ art }}{% endif %}'>Toutes</a> | 
+				<a class="categorie" href='/a/a_{% if ray %}rayon={{ ray }}&{% endif %}{% if art %}?art={{ art }}{% endif %}'>Toutes</a> | 
 			{% for categorie in all_categorie %}
 				
 				{% if categorie.id|slugify == cat|slugify %}
-					<a class="categorie_select" href='/a/a_?{% if art %}art={{ art }}{% endif %}'>{{ categorie.nom }} <i class="fi-x"></i></a>
+					<a class="categorie_select" href='/a/a_?{% if ray %}rayon={{ ray }}&{% endif %}{% if art %}art={{ art }}{% endif %}'>{{ categorie.nom }} <i class="fi-x"></i></a>
 				{% else %}
-					<a class="categorie" href='/a/a_?{% if art %}art={{ art }}&{% endif %}categorie={{ categorie.id }}'>{{ categorie.nom }}</a>
+					<a class="categorie" href='/a/a_?{% if ray %}rayon={{ ray }}&{% endif %}{% if art %}art={{ art }}&{% endif %}categorie={{ categorie.id }}'>{{ categorie.nom }}</a>
 				{% endif %}
 				{% if not forloop.last %} | {% endif %}
 			{% endfor %}
@@ -44,7 +59,7 @@
 	</div>
 	{% for article in object_list %}
 		<div class="row">
-			<div class="large-6 columns">
+			<div class="medium-6 columns">
 				<p>
 					<a href='/a/a_{{ article.id }}'>{{ article.nom|truncatewords:5 }}</a> | 
 					<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
@@ -54,10 +69,10 @@
 				</p>
 			</div>
 			<form method="post" action="" class="ajout_produit_liste">
-				<div class="large-2 columns">
+				<div class="small-4 medium-2 columns">
 					<input class="input-group-field" name='quantite' type="number" value="1">
 				</div>
-				<div class="large-3 columns end">
+				<div class="small-8 medium-3 columns end">
 					{% csrf_token %}
 					<input type='hidden' name='article_id' value='{{ article.id }}' />
 					<div class="input-group">
@@ -76,7 +91,7 @@
 		<div class="column row">
 			<p class="categorie">
 				{% for categorie in article.categorie.all %}
-					<a class="categorie" href='/a/a_?categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
+					<a class="categorie" href='/a/a_?{% if ray %}rayon={{ ray }}&{% endif %}{% if art %}art={{ art }}&{% endif %}categorie={{ categorie.id }}'>{{ categorie.nom }}</a> {% if not forloop.last %} | {% endif %} 
 				{% endfor %}
 			</p><hr>
 		</div>
@@ -85,8 +100,8 @@
 	{% if is_paginated %}
 		<ul class="pagination text-center" role="navigation" aria-label="Pagination">
 			{% if page_obj.has_previous %}
-				<li class="pagination-previous"><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page"><i class="fi-previous"></i></a></li>
-				<li><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.paginator.page_range|first }}" aria-label="Page {{ page_obj.paginator.page_range|first }}">{{ page_obj.paginator.page_range|first }}</a></li>
+				<li class="pagination-previous"><a href="/a/a_?{% if ray %}rayon={{ ray }}&{% endif %}{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous page"><i class="fi-previous"></i></a></li>
+				<li><a href="/a/a_?{% if ray %}rayon={{ ray }}&{% endif %}{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.paginator.page_range|first }}" aria-label="Page {{ page_obj.paginator.page_range|first }}">{{ page_obj.paginator.page_range|first }}</a></li>
 			{% else %}
 				<li class="pagination-previous disabled"><i class="fi-previous"></i></li>
 			{% endif %}
@@ -99,12 +114,12 @@
 						<li class="ellipsis"></li>
 					{% elif page > page_obj.number|add:"4" or page < page_obj.number|add:"-4" %}
 					{% else %}
-						<li><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
+						<li><a href="/a/a_?{% if ray %}rayon={{ ray }}&{% endif %}{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
 					{% endif %}
 				{% endfor %}
 			{% if page_obj.has_next %}
-				<li><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.paginator.page_range|last }}" aria-label="Page {{ page_obj.paginator.page_range|last }}">{{ page_obj.paginator.page_range|last }}</a></li>
-				<li class="pagination-next"><a href="/a/a_?{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page"><i class="fi-next"></i></a></li>
+				<li><a href="/a/a_?{% if ray %}rayon={{ ray }}&{% endif %}{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.paginator.page_range|last }}" aria-label="Page {{ page_obj.paginator.page_range|last }}">{{ page_obj.paginator.page_range|last }}</a></li>
+				<li class="pagination-next"><a href="/a/a_?{% if ray %}rayon={{ ray }}&{% endif %}{% if cat %}categorie={{ cat }}&{% endif %}{% if art %}art={{ art }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next page"><i class="fi-next"></i></a></li>
 			{% else %}
 				<li class="pagination-next disabled"><i class="fi-next"></i></li>
 			{% endif %}
@@ -124,7 +139,7 @@
 					url: '/a/add_to_list/',
 					dataType : "jsonp",
 					cache: false,
-					success:  $(function(data) {
+					success:  $(function() {
 						$("#response").show();
 						setTimeout(function() {
 							$("#response").hide();

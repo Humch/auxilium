@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class='column row'>
-	<p> </p>
-</div>
+{% block menu-off-canvas-small %}
+{% endblock %}
+{% block menu-off-canvas-medium %}
+{% endblock %}
 
+{% block content %}
 <div class="row">
-	<div class="small-12 medium-4 large-4 columns">
+	<div class="small-12 medium-6 large-6 columns">
 		<div class="callout">
-			<h5>Listes actives</h5>
+			<h5>Mes Listes</h5>
 			{% for liste in listes_actives %}
 				<p class="inline_display">
 					<span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex="1" title="{{ liste.magasin.nom }}">
@@ -32,14 +33,46 @@
 			{% endfor %}
 		</div>
 	</div>
-	<div class="small-12 medium-4 large-4 columns">
+	<div class="small-12 medium-6 large-6 columns">
 		<div class="callout">
-			<input  id="article" type="text" placeholder="Rechercher un article" maxlength="254"/>
-			<p id="results"></p>
-		</div>
-	</div>
-	<div class="small-12 medium-4 large-4 columns">
-		<div class="callout">
+			<p class="text-center"><a class="button" data-open="ModalCreateArticle">Ajouter un article <i class="fi-plus"></i></a></p>
+			<div class="reveal" id="ModalCreateArticle" data-reveal>
+				<div class="success callout display_for_success" data-closable id="response_article">
+					<p>l'article <span id="retour_article"></span> a été ajouté à la base de données</p>
+				</div>
+				<div class="alert callout display_for_success" data-closable id="error_create_article">
+					<p class="text-center"><i class="fi-alert red-color"></i> Erreur - l'article n'a pas été créé <i class="fi-alert red-color"></i></p>
+				</div>
+				<div class="column row margin-top">
+					<form action="" method="post" id="ajout_article">
+						{% csrf_token %}
+						{{ form_article.as_p }}
+						<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
+					</form>
+				</div>
+				<button class="close-button" data-close aria-label="Close modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<p class="text-center"><a class="button" data-open="ModalCreateListe">Créer une liste <i class="fi-plus"></i></a></p>
+			<div class="reveal" id="ModalCreateListe" data-reveal>
+				<div class="success callout display_for_success" data-closable id="response_liste">
+					<p class="text-center">la liste <span id="retour_liste"></span> a été ajouté à la base de données</p>
+				</div>
+				<div class="alert callout display_for_success" data-closable id="error_create_liste">
+					<p class="text-center"><i class="fi-alert red-color"></i> Erreur - la liste n'a pas été créé <i class="fi-alert red-color"></i></p>
+				</div>
+				<div class="column row margin-top">
+					<form action="" method="post" id="ajout_liste">
+						{% csrf_token %}
+						{{ form_liste.as_p }}
+						<p class="text-center"><input type="submit" class="button" value="Créer une liste"></p>
+					</form>
+				</div>
+				<button class="close-button" data-close aria-label="Close modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -48,19 +81,6 @@
 
 {% block javascript %}
 
-	<script type="text/javascript">
-		$("#article").autocomplete({
-			source: "/a/get_article/",
-			minLength: 4,
-			select : function( event, ui ) {
-        // Put selected item's text into div
-        $('#results').text(ui.item.value);
-
-        /* Whatever other code you want here */
-}
-		});
-	</script>
-	
 	<script type="text/javascript">
     $(function() {
         $('.archive_list').submit(function() {
@@ -71,7 +91,6 @@
 				dataType : "json",
 				cache: false,
 				success:  function(data) {
-					console.log(data.listeid);
 					if (data.state == "archive") {
 						$("#liste_" + data.listeid).removeClass("green-empty").addClass("green-color");
                     }
@@ -83,6 +102,68 @@
             return false;
         });
     });
+	</script>
+	
+	<script language="JavaScript">
+		$(function() {
+			$('#ajout_article').submit(function() {
+				$.ajax({ 
+					data: $(this).serialize(),
+					type:'POST',
+					url: '/create_article/',
+					dataType : "json",
+					cache: false,
+					success:  function(data) {
+						console.log(data);
+						document.getElementById("retour_article").innerHTML = data;
+						$("#response_article").show();
+						setTimeout(function() {
+							$("#response_article").hide();
+						}, 4000 );
+						document.getElementById('ajout_article').reset();
+					},
+					error : function(xhr) {
+						$("#error_create_article").show();
+						console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+						setTimeout(function() {
+							$("#error_create_article").hide();
+						}, 4000 );
+					}
+				});
+				return false;
+			});
+		});
+	</script>
+	
+	<script language="JavaScript">
+		$(function() {
+			$('#ajout_liste').submit(function() {
+				$.ajax({ 
+					data: $(this).serialize(),
+					type:'POST',
+					url: '/create_liste/',
+					dataType : "json",
+					cache: false,
+					success:  function(data) {
+						console.log(data);
+						document.getElementById("retour_liste").innerHTML = data;
+						$("#response_liste").show();
+						setTimeout(function() {
+							$("#response_liste").hide();
+						}, 4000 );
+						document.getElementById('ajout_liste').reset();
+					},
+					error : function(xhr) {
+						$("#error_create_liste").show();
+						console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+						setTimeout(function() {
+							$("#error_create_liste").hide();
+						}, 4000 );
+					}
+				});
+				return false;
+			});
+		});
 	</script>
 
 {% endblock %}

@@ -31,3 +31,9 @@ body
     {
         color: red !important;
     }
+
+/* surcharge de la propriété de foundation pour afficher le fond */
+
+.off-canvas-content {
+        background-color: transparent !important;
+}

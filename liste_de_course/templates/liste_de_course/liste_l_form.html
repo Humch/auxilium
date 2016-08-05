@@ -2,6 +2,7 @@
 	<form action="/a/l_maj_l/{{ liste.id }}/" method="post">
 		{% csrf_token %}
 		{{ form.as_p }}
+		
 		<p class="text-center">
 			<input type="submit" class="button" value="Valider">
 		</p>

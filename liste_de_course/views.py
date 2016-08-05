@@ -41,6 +41,7 @@ class AjaxableResponseMixin(object):
         if self.request.is_ajax():
             data = {
                 'pk': self.object.pk,
+                'nom': self.object.nom,
             }
             return JsonResponse(data)
         else:
@@ -114,7 +115,7 @@ class ArticleDetail(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(ArticleDetail, self).dispatch(*args, **kwargs)
     
-class ArticleCreate(CreateView):
+class ArticleCreate(AjaxableResponseMixin, CreateView):
     model = Article
     fields = ['nom','rayon','marque','categorie']
 
@@ -145,10 +146,10 @@ class ListeList(ListView):
     model = Liste
     queryset = Liste.objects.all().order_by('archive','-date_creation_liste','-date_modification_liste')
     
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         
         context = super(ListeList, self).get_context_data(**kwargs)
-        context['form_liste'] = ListeCreateForm()
+        context['form_liste'] = ListeCreateForm(user=self.request.user)
         
         return context
     
@@ -174,7 +175,7 @@ class ListeDetail(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(ListeDetail, self).dispatch(*args, **kwargs)
     
-class ListeCreate(CreateView):
+class ListeCreate(AjaxableResponseMixin, CreateView):
     model = Liste
     fields = ['nom','active','archive','magasin','propriete_de']
 

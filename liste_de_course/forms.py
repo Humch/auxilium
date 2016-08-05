@@ -38,16 +38,30 @@ class ArticleCreateForm(ModelForm):
         }
 
 class ListeCreateForm(ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+
+        self.user = kwargs.pop('user')
+        super(ListeCreateForm, self).__init__(*args, **kwargs)
+        self.fields['propriete_de'].initial = self.user.id
+    
     magasin = ModelChoiceField(
                 queryset = Magasin.objects.all(),
-                empty_label='Choix du magasin',
+                empty_label = 'Choix du magasin',
                 label = '',
                 widget = Select(attrs={'required':True})
+            )
+    propriete_de = forms.IntegerField(
+                        widget = forms.HiddenInput(),
+            )
+    active = forms.BooleanField(
+                        widget = forms.HiddenInput(),
+                        initial = True
             )
     
     class Meta:
         model = Liste
-        fields = ['nom','magasin']
+        fields = ['nom','magasin','propriete_de']
         labels = {
             'nom': '',
         }

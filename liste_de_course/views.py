@@ -218,22 +218,23 @@ def get_article(request, **kwargs):
     
         q = request.GET.get('term', '')
         articles = Article.objects.filter(nom__icontains = q )[:10]
-        results = []
+        data = []
     
         for article in articles:
             article_json = {}
             article_json['label'] = '%s' % article.nom
             article_json['id'] = '%s' % article.id
             article_json['value'] = '%s' % article.nom
-            results.append(article_json)
-        data = json.dumps(results)
+            data.append(article_json)
+            
+        return JsonResponse(data, safe=False)
     
     else:
-        data = 'fail'
+        data = json.dumps('fail')
     
-    mimetype = 'application/json'
+        return HttpResponseBadRequest(data, 'application/json')
     
-    return HttpResponse(data, mimetype)
+    
 
 # AJAX - ajoute un article à une liste
 

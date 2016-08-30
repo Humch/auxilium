@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, ModelChoiceField, ModelMultipleChoiceField, Select
+from django.forms import ModelForm, TextInput, ModelChoiceField, ModelMultipleChoiceField, Select, SelectMultiple
 
 from django import forms
 

@@ -46,8 +46,21 @@
 				<div class="column row margin-top">
 					<form action="" method="post" id="ajout_article">
 						{% csrf_token %}
-						{{ form_article.as_p }}
-						<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
+						<div class="small-12 columns">
+							{{ form_article.nom }}
+						</div>
+						<div class="small-12 columns">
+							{{ form_article.rayon }}
+						</div>
+						<div class="small-12 columns">
+							{{ form_article.marque }}
+						</div>
+						<div class="small-12 columns">
+							{{ form_article.categorie }}
+						</div>
+						<div class="small-12 columns">
+							<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
+						</div>
 					</form>
 				</div>
 				<button class="close-button" data-close aria-label="Close modal" type="button">

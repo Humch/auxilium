@@ -130,6 +130,16 @@ class ArticleUpdate(UpdateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ArticleUpdate, self).dispatch(*args, **kwargs)
+
+class ArticleForListUpdate(UpdateView):
+    model = Article
+    fields = ['nom','rayon','marque','categorie']
+    template_name='liste_de_course/article_l_form.html'
+    success_url = reverse_lazy('article-list')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ArticleForListUpdate, self).dispatch(*args, **kwargs)
     
 class ArticleDelete(DeleteView):
     model = Article

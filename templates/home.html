@@ -133,7 +133,6 @@
 					dataType : "json",
 					cache: false,
 					success:  function(data) {
-						console.log(data);
 						document.getElementById("retour_article").innerHTML = data.nom;
 						$("#response_article").show();
 						setTimeout(function() {
@@ -143,7 +142,6 @@
 					},
 					error : function(xhr) {
 						$("#error_create_article").show();
-						console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
 						setTimeout(function() {
 							$("#error_create_article").hide();
 						}, 4000 );

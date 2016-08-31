@@ -99,8 +99,7 @@
 					dataType : "json",
 					cache: false,
 					success:  function(data) {
-						console.log(data);
-						document.getElementById("retour_liste").innerHTML = data;
+						document.getElementById("retour_liste").innerHTML = data.nom;
 						$("#response_liste").show();
 						setTimeout(function() {
 							$("#response_liste").hide();
@@ -109,7 +108,6 @@
 					},
 					error : function(xhr) {
 						$("#error_create_liste").show();
-						console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
 						setTimeout(function() {
 							$("#error_create_liste").hide();
 						}, 4000 );

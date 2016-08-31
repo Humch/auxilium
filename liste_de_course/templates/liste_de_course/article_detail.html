@@ -13,7 +13,7 @@
 	<div class="column row">
 		<p>
 			<h4>
-				{{ article.nom }} | 
+				<a href='/a/a_'><i class="fi-arrow-left"></i></a> {{ article.nom }} | 
 				<button onClick="updateArticle({{ article.id }})"><i class="fi-pencil blue-color"></i></button>
 				{% if user.is_superuser %}
 					 | <button onClick="deleteArticle({{ article.id }})"><i class="fi-x red-color"></i></button>

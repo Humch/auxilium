@@ -85,6 +85,14 @@ i.green-empty:hover {
     text-shadow : none;
 }
 
+i.grey-color {
+  color : grey;
+}
+
+i.size-24 {
+  font-size : 24px;
+}
+
 .inline_display {
     display:inline;
     margin:0;
@@ -120,15 +128,21 @@ button.hide {
 
 @media screen and (max-width: 39.9375em) {
   table.stack_small thead {
-    display: none; }
+    display: none;
+  }
   table.stack_small tfoot {
-    display: none; }
+    display: none;
+  }
   table.stack_small tr,
   table.stack_small th,
   table.stack_small td {
-    display: block; }
+    display: block;
+  }
   table.stack_small td {
-    border-top: 0; } }
+    border-top: 0;
+    margin-bottom: 1rem;
+  }
+}
     
 div.black-color {
   background-color: black !important;
@@ -138,3 +152,10 @@ li.white-color {
   color: white;
 }
 
+.strike {
+text-decoration: line-through;
+}
+
+button.pill-special-width {
+  width: calc(33% - 1px) !important;
+}

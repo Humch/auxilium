@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import ArticleList, ArticleDetail, ArticleCreate, ArticleUpdate, ArticleForListUpdate, ArticleDelete, ListeList, ListeDetail, ListeCreate, ListeUpdate, ListeForListUpdate, ListeDelete, get_article, add_to_list, archive_list, modify_product_quantity
+from .views import ArticleList, ArticleDetail, ArticleCreate, ArticleUpdate, ArticleForListUpdate, ArticleDelete, ListeList, ListeDetail, ListeCreate, ListeUpdate, ListeForListUpdate, ListeDelete, get_article, add_to_list, archive_list, modify_product_quantity, raye_produit
 
 urlpatterns = [
     url(r'^a_$', ArticleList.as_view(), name='article-list'),
@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^add_to_list/', add_to_list, name='add_to_list'),
     url(r'^archive_list/', archive_list, name='archive_list'),
     url(r'^modify_product_quantity/',modify_product_quantity, name='modify_product_quantity'),
+    url(r'^raye_produit/', raye_produit, name='raye_produit'),
 ]

@@ -267,7 +267,7 @@ def add_to_list(request,**kwargs):
          
         except ObjectDoesNotExist:
             
-            p = Produit(nom=a,quantite=request.POST.get("quantite"))
+            p = Produit(nom=a,quantite=request.POST.get("quantite"),raye=False)
             p.save()
             l = Liste.objects.get(id=request.POST.get("liste_id"))
             l.produit.add(p)
@@ -390,3 +390,51 @@ def modify_product_quantity(request,**kwargs):
         mimetype = 'application/json'
     
         return HttpResponseBadRequest(data, mimetype)
+    
+@login_required
+def raye_produit(request,**kwargs):
+    
+    if request.method == 'POST' and request.is_ajax():
+
+        produit = Produit.objects.get(id=request.POST.get("produit_id"))
+        results = {}
+        
+        if produit.raye == False:
+            
+            produit.raye = True            
+            produit.save()
+            
+            results['state'] = 'raye'
+            results['produit_id'] = produit.id
+            
+        elif produit.raye == True:
+                
+            produit.raye = False            
+            produit.save()
+            
+            results['state'] = 'efface_raye'
+            results['produit_id'] = produit.id
+                
+        else:
+        
+            data = json.dumps('fail')
+    
+            mimetype = 'application/json'
+    
+            return HttpResponseBadRequest(data, mimetype)
+        
+        data = json.dumps(results)
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)
+    
+    else:
+        
+        data = json.dumps('fail')
+    
+        mimetype = 'application/json'
+    
+        return HttpResponseBadRequest(data, mimetype)
+        
+        

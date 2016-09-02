@@ -38,8 +38,8 @@
 			<table class="hover stack_small">
 				<thead>
 					<tr>
-						<th>Produit</th>
-						<th>Quantité</th>
+						<th class='text-center'>Produit</th>
+						<th class='text-center'>Quantité</th>
 					</tr>
 				 </thead>
 				<tbody>
@@ -52,21 +52,27 @@
 							</button>
 						</div>
 						<tr id="produit_{{produit.id}}">
+							{% if produit.raye %}
+								<td>
+									<span id="raye_texte_{{ produit.id }}" class="strike">{{ produit.nom }}</span> <button onClick="rayeProduit({{ produit.id }})"><i id="raye_produit_{{ produit.id }}" class="fi-check green-color size-24"></i></button>
+								</td>
+							{% else %}
+								<td>
+									<span id="raye_texte_{{ produit.id }}">{{ produit.nom }}</span> <button onClick="rayeProduit({{ produit.id }})"><i id="raye_produit_{{ produit.id }}" class="fi-check grey-color size-24"></i></button>
+								</td>
+							{% endif %}
 							<td>
-								{{ produit.nom }}
-							</td>
-							<td>
-								<div class="small button-group">
+								<div class="expanded small button-group">
 									{% if liste.active %}
 										{% if produit.quantite == 1.0  %}
-											<button type="button" class="pill-left button hide" id="minus_produit_{{produit.id}}" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
-											<button type="button" id="delete_produit_{{produit.id}}" data-open="reveal_delete_produit_{{produit.id}}" class="alert pill-left button"><i class="fi-x"></i></button>
+											<button type="button" class="pill-special-width pill-left button hide" id="minus_produit_{{produit.id}}" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
+											<button type="button" id="delete_produit_{{produit.id}}" data-open="reveal_delete_produit_{{produit.id}}" class="pill-special-width alert pill-left button"><i class="fi-x"></i></button>
 										{% else %}
-											<button type="button" class="pill-left button" id="minus_produit_{{produit.id}}" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
-											<button type="button" id="delete_produit_{{produit.id}}" data-open="reveal_delete_produit_{{produit.id}}" class="alert pill-left button hide"><i class="fi-x"></i></button>
+											<button type="button" class="pill-special-width pill-left button" id="minus_produit_{{produit.id}}" onClick="modifyQuantity('soustract',{{ produit.id }})"><i class="fi-minus"></i></button>
+											<button type="button" id="delete_produit_{{produit.id}}" data-open="reveal_delete_produit_{{produit.id}}" class="pill-special-width alert pill-left button hide"><i class="fi-x"></i></button>
 										{% endif %}
-										<button type="button" class="button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
-										<button type="button" class="pill-right button" onClick="modifyQuantity('add',{{ produit.id }})"><i class="fi-plus"></i></button>
+										<button type="button" class="pill-special-width button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
+										<button type="button" class="pill-special-width pill-right button" onClick="modifyQuantity('add',{{ produit.id }})"><i class="fi-plus"></i></button>
 									{% else %}
 										<button type="button" class="disabled pill-left button"><i class="fi-minus"></i></button>
 										<button type="button" class="button" id="quantite_{{produit.id}}">{{ produit.quantite }}</button>
@@ -240,6 +246,27 @@
 			.done(function(resp){
 				$("#ListeDelete").html(resp).foundation('open');
 			});
+		}
+	</script>
+	
+	<script type="text/javascript">
+		function rayeProduit(produit_id,csrftoken){
+				$.ajax({
+					url:'/a/raye_produit/',
+					data: {produit_id : produit_id, csrfmiddlewaretoken : window.csrftoken},
+					dataType: "json",
+					type: 'POST',
+					success: function(result) {
+						if (result.state == "raye") {
+							$("#raye_produit_" + result.produit_id).removeClass("grey-color").addClass("green-color");
+							$("#raye_texte_" + result.produit_id).addClass("strike");
+						}
+						else if (result.state == "efface_raye") {
+							$("#raye_produit_" + result.produit_id).removeClass("green-color").addClass("grey-color");
+							$("#raye_texte_" + result.produit_id).removeClass("strike");
+						}
+					}
+				});
 		}
 	</script>
 	

@@ -9,7 +9,7 @@
 
 {% block content %}
 	<div>
-		<h2 class="column row">Listes de courses <a class="button" data-open="ModalCreateListe">Créer une liste <i class="fi-plus"></i></a></h2>
+		<h2 class="column row">Listes de courses <a class="button" data-open="ModalCreateListe">Créer une liste <i class="fi-plus"></i></a> <a href="/a/a_" class='button'><i class="fi-annotate"></i> <span>Articles</span></a></h2>
 			<div class="reveal" id="ModalCreateListe" data-reveal>
 				<div class="success callout display_for_success" data-closable id="response_liste">
 					<p class="text-center">la liste <span id="retour_liste"></span> a été ajouté à la base de données</p>
@@ -95,12 +95,11 @@
 				$.ajax({ 
 					data: $(this).serialize(),
 					type:'POST',
-					url: '/create_liste/',
+					url: '/a/l_add/',
 					dataType : "json",
 					cache: false,
 					success:  function(data) {
-						console.log(data);
-						document.getElementById("retour_liste").innerHTML = data;
+						document.getElementById("retour_liste").innerHTML = data.nom;
 						$("#response_liste").show();
 						setTimeout(function() {
 							$("#response_liste").hide();
@@ -109,7 +108,6 @@
 					},
 					error : function(xhr) {
 						$("#error_create_liste").show();
-						console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
 						setTimeout(function() {
 							$("#error_create_liste").hide();
 						}, 4000 );

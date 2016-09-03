@@ -13,10 +13,10 @@
 	<div class="column row">
 		<p>
 			<h4>
-				{{ article.nom }} | 
-				<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
+				<a href='/a/a_'><i class="fi-arrow-left"></i></a> {{ article.nom }} | 
+				<button onClick="updateArticle({{ article.id }})"><i class="fi-pencil blue-color"></i></button>
 				{% if user.is_superuser %}
-					 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
+					 | <button onClick="deleteArticle({{ article.id }})"><i class="fi-x red-color"></i></button>
 				{% endif %}
 			</h4>
 		</p>
@@ -50,7 +50,10 @@
 			</div>
 			</form>
 	</div>
-
+	<div class="reveal" id="ArticleUpdate" data-reveal>
+	</div>
+	<div class="reveal" id="ArticleDelete" data-reveal>
+	</div>
 {% endblock %}
 
 {% block javascript %}
@@ -64,7 +67,7 @@
                 url: '/a/add_to_list/',
 				dataType : "jsonp",
 				cache: false,
-				success:  $(function(data) {
+				success:  $(function() {
 					$("#response").show();
 					setTimeout(function() {
 						$("#response").hide();
@@ -75,5 +78,21 @@
         });
     });
 	</script>
+		<script type="text/javascript">
+		function updateArticle($idArticle) {
+			$.ajax('/a/a_maj/' + $idArticle + '/')
+			.done(function(resp){
+				$("#ArticleUpdate").html(resp).foundation('open');
+			});
+		}
+	</script>
 	
+	<script type="text/javascript">
+		function deleteArticle($idArticle) {
+			$.ajax('/a/a_delete/' + $idArticle + '/')
+		.done(function(resp){
+			$("#ArticleDelete").html(resp).foundation('open');
+		});
+		}
+	</script>
 {% endblock %}

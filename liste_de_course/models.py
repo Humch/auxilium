@@ -63,6 +63,7 @@ class Produit(models.Model):
     nom = models.ForeignKey(Article, on_delete=models.CASCADE)
     quantite = models.DecimalField(max_digits=4, decimal_places=1)
     unite = models.CharField(max_length=30, choices=TYPES_UNITE, default=UNITE)
+    raye = models.BooleanField()
     
     def __str__(self):
         return str(self.nom)

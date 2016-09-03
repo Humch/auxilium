@@ -1,11 +1,11 @@
-<div class='row' >
-	<form action="/a/a_delete/{{ article.id }}/" method="post">
+<div class="row">
+	<form action="/a/a_maj_l/{{ article.id }}/" method="post">
 		{% csrf_token %}
-		<p class="text-center">Voulez vous vraiment effacer {{ article.nom }} ?</p>
+		{{ form.as_p }}
 		<p class="text-center">
 			<input type="submit" class="button" value="Valider">
 		</p>
-</form>
+	</form>
 </div>
 <button class="close-button" data-close aria-label="Close modal" type="button">
 	<span aria-hidden="true">&times;</span>

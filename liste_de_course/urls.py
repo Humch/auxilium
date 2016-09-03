@@ -1,12 +1,13 @@
 from django.conf.urls import url
 
-from .views import ArticleList, ArticleDetail, ArticleCreate, ArticleUpdate, ArticleDelete, ListeList, ListeDetail, ListeCreate, ListeUpdate, ListeForListUpdate, ListeDelete, get_article, add_to_list, archive_list, modify_product_quantity
+from .views import ArticleList, ArticleDetail, ArticleCreate, ArticleUpdate, ArticleForListUpdate, ArticleDelete, ListeList, ListeDetail, ListeCreate, ListeUpdate, ListeForListUpdate, ListeDelete, get_article, add_to_list, archive_list, modify_product_quantity, raye_produit
 
 urlpatterns = [
     url(r'^a_$', ArticleList.as_view(), name='article-list'),
     url(r'^a_(?P<pk>\d+)/$', ArticleDetail.as_view(), name='article-detail'),
     url(r'^a_add/$', ArticleCreate.as_view(), name='article-add'),
     url(r'^a_maj/(?P<pk>\d+)/$', ArticleUpdate.as_view(), name='article-update'),
+    url(r'^a_maj_l/(?P<pk>\d+)/$', ArticleForListUpdate.as_view(), name='article-for-list-update'),
     url(r'^a_delete/(?P<pk>\d+)/$', ArticleDelete.as_view(), name='article-delete'),
     url(r'^l_$', ListeList.as_view(), name='liste-list'),
     url(r'^l_(?P<pk>\d+)/$', ListeDetail.as_view(), name='liste-detail'),
@@ -18,4 +19,5 @@ urlpatterns = [
     url(r'^add_to_list/', add_to_list, name='add_to_list'),
     url(r'^archive_list/', archive_list, name='archive_list'),
     url(r'^modify_product_quantity/',modify_product_quantity, name='modify_product_quantity'),
+    url(r'^raye_produit/', raye_produit, name='raye_produit'),
 ]

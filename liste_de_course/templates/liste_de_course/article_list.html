@@ -62,10 +62,10 @@
 			<div class="medium-6 columns">
 				<p>
 					<a href='/a/a_{{ article.id }}'>{{ article.nom|truncatewords:5 }}</a> | 
-					<a href='/a/a_maj/{{ article.id }}'><i class="fi-refresh"></i></a>
-					{% if user.is_superuser %}
-						 | <a href='/a/a_delete/{{ article.id }}'><i class="fi-x red-color"></i></a>
-					{% endif %}
+						<button onClick="updateArticle({{ article.id }})"><i class="fi-pencil blue-color"></i></button>
+						{% if user.is_superuser %}
+							 | <button onClick="deleteArticle({{ article.id }})"><i class="fi-x red-color"></i></button>
+						{% endif %}
 				</p>
 			</div>
 			<form method="post" action="" class="ajout_produit_liste">
@@ -126,6 +126,11 @@
 		</ul>		
 	{% endif %}
 <!-- fin de la pagination -->
+
+	<div class="reveal" id="ArticleUpdate" data-reveal>
+	</div>
+	<div class="reveal" id="ArticleDelete" data-reveal>
+	</div>
 {% endblock %}
 
 {% block javascript %}
@@ -151,4 +156,21 @@
 		});
 	</script>
 
+	<script type="text/javascript">
+		function updateArticle($idArticle) {
+			$.ajax('/a/a_maj_l/' + $idArticle + '/')
+			.done(function(resp){
+				$("#ArticleUpdate").html(resp).foundation('open');
+			});
+		}
+	</script>
+	
+	<script type="text/javascript">
+		function deleteArticle($idArticle) {
+			$.ajax('/a/a_delete/' + $idArticle + '/')
+		.done(function(resp){
+			$("#ArticleDelete").html(resp).foundation('open');
+		});
+		}
+	</script>
 {% endblock %}	

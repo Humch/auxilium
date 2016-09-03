@@ -16,9 +16,9 @@
 						<img src='{{ MEDIA_URL }}{{ liste.magasin.logo.name }}' width="32" height="32">
 					</span>
 					<a href='/a/l_{{ liste.id }}'>{{ liste.nom }}</a> | 
-					<a href='/a/l_maj/{{ liste.id }}'><i class="fi-refresh"></i></a>
+					<button onClick="updateListe({{ liste.id }})"><i class="fi-pencil blue-color"></i></button>
 					{% if user.is_superuser %}
-						 | <a href='/a/l_delete/{{ liste.id }}'><i class="fi-x red-color"></i></a>
+						 | <button onClick="deleteListe({{ liste.id }})"><i class="fi-x red-color"></i></button>
 					{% endif %}
 					{% if liste.archive %}
 						| <i class="fi-shopping-cart green-color"></i>
@@ -46,8 +46,21 @@
 				<div class="column row margin-top">
 					<form action="" method="post" id="ajout_article">
 						{% csrf_token %}
-						{{ form_article.as_p }}
-						<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
+						<div class="small-12 columns">
+							{{ form_article.nom }}
+						</div>
+						<div class="small-12 columns">
+							{{ form_article.rayon }}
+						</div>
+						<div class="small-12 columns">
+							{{ form_article.marque }}
+						</div>
+						<div class="small-12 columns">
+							{{ form_article.categorie }}
+						</div>
+						<div class="small-12 columns">
+							<p class="text-center"><input type="submit" class="button" value="Ajouter un article"></p>
+						</div>
 					</form>
 				</div>
 				<button class="close-button" data-close aria-label="Close modal" type="button">
@@ -75,6 +88,12 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div class="reveal" id="ListeUpdate" data-reveal>
+</div>
+
+<div class="reveal" id="ListeDelete" data-reveal>
 </div>
 
 {% endblock %}
@@ -110,12 +129,11 @@
 				$.ajax({ 
 					data: $(this).serialize(),
 					type:'POST',
-					url: '/create_article/',
+					url: '/a/a_add/',
 					dataType : "json",
 					cache: false,
 					success:  function(data) {
-						console.log(data);
-						document.getElementById("retour_article").innerHTML = data;
+						document.getElementById("retour_article").innerHTML = data.nom;
 						$("#response_article").show();
 						setTimeout(function() {
 							$("#response_article").hide();
@@ -124,7 +142,6 @@
 					},
 					error : function(xhr) {
 						$("#error_create_article").show();
-						console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
 						setTimeout(function() {
 							$("#error_create_article").hide();
 						}, 4000 );
@@ -141,12 +158,12 @@
 				$.ajax({ 
 					data: $(this).serialize(),
 					type:'POST',
-					url: '/create_liste/',
+					url: '/a/l_add/',
 					dataType : "json",
 					cache: false,
 					success:  function(data) {
 						console.log(data);
-						document.getElementById("retour_liste").innerHTML = data;
+						document.getElementById("retour_liste").innerHTML = data.nom;
 						$("#response_liste").show();
 						setTimeout(function() {
 							$("#response_liste").hide();
@@ -164,6 +181,26 @@
 				return false;
 			});
 		});
+	</script>
+
+	</script>
+	
+	<script type="text/javascript">
+		function updateListe($idListe) {
+			$.ajax('/a/l_maj_l/' + $idListe + '/')
+			.done(function(resp){
+				$("#ListeUpdate").html(resp).foundation('open');
+			});
+		}
+	</script>
+	
+	<script type="text/javascript">
+		function deleteListe($idListe) {
+			$.ajax('/a/l_delete/' + $idListe + '/')
+  .done(function(resp){
+    $("#ListeDelete").html(resp).foundation('open');
+});
+		}
 	</script>
 
 {% endblock %}

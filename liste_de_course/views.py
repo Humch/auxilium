@@ -41,6 +41,7 @@ class AjaxableResponseMixin(object):
         if self.request.is_ajax():
             data = {
                 'pk': self.object.pk,
+                'nom': self.object.nom,
             }
             return JsonResponse(data)
         else:
@@ -114,7 +115,7 @@ class ArticleDetail(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(ArticleDetail, self).dispatch(*args, **kwargs)
     
-class ArticleCreate(CreateView):
+class ArticleCreate(AjaxableResponseMixin, CreateView):
     model = Article
     fields = ['nom','rayon','marque','categorie']
 
@@ -129,6 +130,16 @@ class ArticleUpdate(UpdateView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(ArticleUpdate, self).dispatch(*args, **kwargs)
+
+class ArticleForListUpdate(UpdateView):
+    model = Article
+    fields = ['nom','rayon','marque','categorie']
+    template_name='liste_de_course/article_l_form.html'
+    success_url = reverse_lazy('article-list')
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ArticleForListUpdate, self).dispatch(*args, **kwargs)
     
 class ArticleDelete(DeleteView):
     model = Article
@@ -145,10 +156,10 @@ class ListeList(ListView):
     model = Liste
     queryset = Liste.objects.all().order_by('archive','-date_creation_liste','-date_modification_liste')
     
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         
         context = super(ListeList, self).get_context_data(**kwargs)
-        context['form_liste'] = ListeCreateForm()
+        context['form_liste'] = ListeCreateForm(user=self.request.user)
         
         return context
     
@@ -174,7 +185,7 @@ class ListeDetail(DetailView):
     def dispatch(self, *args, **kwargs):
         return super(ListeDetail, self).dispatch(*args, **kwargs)
     
-class ListeCreate(CreateView):
+class ListeCreate(AjaxableResponseMixin, CreateView):
     model = Liste
     fields = ['nom','active','archive','magasin','propriete_de']
 
@@ -217,22 +228,23 @@ def get_article(request, **kwargs):
     
         q = request.GET.get('term', '')
         articles = Article.objects.filter(nom__icontains = q )[:10]
-        results = []
+        data = []
     
         for article in articles:
             article_json = {}
             article_json['label'] = '%s' % article.nom
             article_json['id'] = '%s' % article.id
             article_json['value'] = '%s' % article.nom
-            results.append(article_json)
-        data = json.dumps(results)
+            data.append(article_json)
+            
+        return JsonResponse(data, safe=False)
     
     else:
-        data = 'fail'
+        data = json.dumps('fail')
     
-    mimetype = 'application/json'
+        return HttpResponseBadRequest(data, 'application/json')
     
-    return HttpResponse(data, mimetype)
+    
 
 # AJAX - ajoute un article à une liste
 
@@ -255,7 +267,7 @@ def add_to_list(request,**kwargs):
          
         except ObjectDoesNotExist:
             
-            p = Produit(nom=a,quantite=request.POST.get("quantite"))
+            p = Produit(nom=a,quantite=request.POST.get("quantite"),raye=False)
             p.save()
             l = Liste.objects.get(id=request.POST.get("liste_id"))
             l.produit.add(p)
@@ -378,3 +390,51 @@ def modify_product_quantity(request,**kwargs):
         mimetype = 'application/json'
     
         return HttpResponseBadRequest(data, mimetype)
+    
+@login_required
+def raye_produit(request,**kwargs):
+    
+    if request.method == 'POST' and request.is_ajax():
+
+        produit = Produit.objects.get(id=request.POST.get("produit_id"))
+        results = {}
+        
+        if produit.raye == False:
+            
+            produit.raye = True            
+            produit.save()
+            
+            results['state'] = 'raye'
+            results['produit_id'] = produit.id
+            
+        elif produit.raye == True:
+                
+            produit.raye = False            
+            produit.save()
+            
+            results['state'] = 'efface_raye'
+            results['produit_id'] = produit.id
+                
+        else:
+        
+            data = json.dumps('fail')
+    
+            mimetype = 'application/json'
+    
+            return HttpResponseBadRequest(data, mimetype)
+        
+        data = json.dumps(results)
+    
+        mimetype = 'application/json'
+    
+        return HttpResponse(data, mimetype)
+    
+    else:
+        
+        data = json.dumps('fail')
+    
+        mimetype = 'application/json'
+    
+        return HttpResponseBadRequest(data, mimetype)
+        
+        

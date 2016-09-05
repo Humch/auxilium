@@ -9,7 +9,7 @@
 
 {% block content %}
 	<div>
-		<h2 class="column row">Listes de courses <a class="button" data-open="ModalCreateListe">Créer une liste <i class="fi-plus"></i></a> <a href="/a/a_" class='button'><i class="fi-annotate"></i> <span>Articles</span></a></h2>
+		<h2 class="column row">Listes de courses <a class="button" data-open="ModalCreateListe">Créer une liste <i class="fi-plus"></i></a> {% if user.is_superuser %}<a href="/a/a_" class='button'><i class="fi-annotate"></i> <span>Articles</span></a>{% endif %}</h2>
 			<div class="reveal" id="ModalCreateListe" data-reveal>
 				<div class="success callout display_for_success" data-closable id="response_liste">
 					<p class="text-center">la liste <span id="retour_liste"></span> a été ajouté à la base de données</p>

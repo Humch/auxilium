@@ -259,11 +259,11 @@ def add_to_list(request,**kwargs):
         
         except ObjectDoesNotExist:
         
-            return HttpResponseBadRequest()
+            a = Article.objects.create(nom=request.POST.get("article"))
         
         try:
             
-            p =  Produit.objects.filter(liste=request.POST.get("liste_id")).get(nom__id=request.POST.get("article_id"))
+            p =  Produit.objects.filter(liste=request.POST.get("liste_id")).get(nom__id=a.id)
          
         except ObjectDoesNotExist:
             
@@ -274,7 +274,7 @@ def add_to_list(request,**kwargs):
             
         else:
             
-            p =  Produit.objects.filter(liste=request.POST.get("liste_id")).get(nom__id=request.POST.get("article_id"))
+            p =  Produit.objects.filter(liste=request.POST.get("liste_id")).get(nom__id=a.id)
             p.quantite = p.quantite + int(request.POST.get("quantite"))
             p.save()
         

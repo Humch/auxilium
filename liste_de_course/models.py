@@ -37,8 +37,8 @@ class Article(models.Model):
     nom = models.CharField(max_length=200)
     date_creation = models.DateTimeField(auto_now_add = True)
     date_modification = models.DateTimeField(auto_now = True)
-    rayon = models.ForeignKey(Rayon, on_delete=models.CASCADE)
-    marque = models.ForeignKey(Marque, on_delete=models.CASCADE)
+    rayon = models.ForeignKey(Rayon, on_delete=models.CASCADE,blank=True,null=True)
+    marque = models.ForeignKey(Marque, on_delete=models.CASCADE,blank=True,null=True)
     categorie = models.ManyToManyField(Categorie)
     
     def __str__(self):

@@ -390,7 +390,9 @@ def modify_product_quantity(request,**kwargs):
         mimetype = 'application/json'
     
         return HttpResponseBadRequest(data, mimetype)
-    
+ 
+# AJAX - enregistrement du changement du champ raye
+   
 @login_required
 def raye_produit(request,**kwargs):
     

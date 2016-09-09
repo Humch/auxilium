@@ -2,3 +2,4 @@
 
 gunicorn==19.6
 psycopg2==2.6.2
+Wand==0.4.3

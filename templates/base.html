@@ -52,6 +52,9 @@
 					<li>
 						<a href="/a/l_"><i class="fi-clipboard-notes"></i></a>
 					</li>
+					<li>
+						<a href="{% url 'fichier-list' %}"><i class="fi-photo"></i></a>
+					</li>
 					{% if user.is_superuser %}
 						<li>
 							<a href="/admin/"><i class="fi-torso-business"></i></a>
@@ -75,7 +78,9 @@
 						</li>
 						<li>
 							<a href="/a/l_"><i class="fi-clipboard-notes"></i> <span>Listes</span></a>
-
+						</li>
+						<li>
+							<a href="{% url 'fichier-list' %}"><i class="fi-page"></i> <span>GED</span></a>
 						</li>
 					</ul>
 				</div>

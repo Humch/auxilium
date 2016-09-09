@@ -15,11 +15,14 @@ from .views import HomeView
 
 from liste_de_course import urls
 
+from ged import urls
+
 urlpatterns = [
     url(r'^accounts/login/$', auth_views.login, name='login'),
     url(r'^accounts/logout/$', auth_views.logout, name='logout', kwargs={'next_page': '/'}),
     url(r'^$', HomeView.as_view()),
     url(r'^a/', include('liste_de_course.urls')),
+    url(r'^g/', include('ged.urls')),
     url(r'^admin/', admin.site.urls),
 ]
 

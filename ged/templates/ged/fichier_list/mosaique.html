@@ -1,0 +1,7 @@
+    {% for fichier in fichiers %}
+            {% cycle '<div class="row">' '' '' ''%}
+            <div class="small-3 columns  {% if forloop.last %} end {% endif %}">
+                <a class="thumbnail" href='{% url 'fichier-detail' fichier.id %}'><img src="{{ fichier.thumbnail.url }}"/></a>
+            </div>
+            {% cycle '' '' '' '</div>'%}
+    {% endfor %}

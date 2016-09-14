@@ -21,6 +21,7 @@ class Etiquette(models.Model):
 class Fichier(models.Model):
     
     fichier = models.FileField(upload_to='GED/')
+    nom_fichier = models.CharField(max_length=200)
     thumbnail = models.ImageField(upload_to='GED/thumb/',default='GED/thumb/default-fichier.jpg',blank=True)
     emetteur = models.ForeignKey(Emetteur, on_delete=models.CASCADE)
     etiquette = models.ManyToManyField(Etiquette,blank=True)
@@ -31,6 +32,6 @@ class Fichier(models.Model):
     partage_avec = models.ManyToManyField(User, blank=True, related_name='utilisateur_GED')
 
     def __str__(self):
-        return self.fichier.name
+        return self.nom_fichier
     
 # TODO ==> creer une methode post_save

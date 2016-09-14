@@ -1,0 +1,12 @@
+<div class="row">
+	<form action="/g/g_maj/{{ fichier.id }}/" method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<p class="text-center">
+			<input type="submit" class="button" value="Valider">
+		</p>
+	</form>
+</div>
+<button class="close-button" data-close aria-label="Close modal" type="button">
+	<span aria-hidden="true">&times;</span>
+</button>

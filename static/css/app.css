@@ -159,3 +159,7 @@ text-decoration: line-through;
 button.pill-special-width {
   width: calc(33% - 1px) !important;
 }
+
+div.margin-bottom {
+  margin-bottom: 10px;
+}

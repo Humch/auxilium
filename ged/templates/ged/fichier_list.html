@@ -2,12 +2,40 @@
 
 {% block title %}Liste des fichiers{% endblock %}
 
+{% block menu-off-canvas-small %}
+{% endblock %}
+{% block menu-off-canvas-medium %}
+{% endblock %}
+
 {% block content %}
-    {% for fichier in object_list %}
-            {% cycle '<div class="row">' '' '' ''%}
-            <div class="small-3 columns">
-                <a class="thumbnail" href='{% url 'fichier-detail' fichier.id %}'><img src="{{ fichier.thumbnail.url }}"/></a>
-            </div>
-            {% cycle '' '' '' '</div>'%}
-    {% endfor %}
+        <div class='row margin-bottom'>
+                <div class='small-12 columns'>
+                        <div class="small button-group">
+                                <a class="button" onClick="changeVueFichier('details')"><i class="fi-list-thumbnails"></i> Détails</a>
+                                <a class="button" onClick="changeVueFichier('liste')"><i class="fi-list"></i> Liste</a>
+                                <a class="button" onClick="changeVueFichier('mosaique')"><i class="fi-thumbnails"> Mosaïque</i></a>
+                        </div>
+                </div>
+        </div>
+<span id="vue_fichier">
+ {% include request.session.vuefichier %}
+</span>
+{% endblock %}
+
+{% block javascript %}
+        <script type="text/javascript">
+		function changeVueFichier(action){
+			$.ajax({
+				url:'/g/g_',
+				data: {action: action},
+				dataType: "html",
+				type: 'GET',
+				success: function(data){
+					$("#vue_fichier").empty().hide();
+					$("#vue_fichier").append(data);
+					$('#vue_fichier').fadeIn(2000);
+					}
+				});
+		}
+	</script>
 {% endblock %}

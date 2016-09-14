@@ -1,0 +1,27 @@
+<div class='row'>
+        <table class="stack">
+                <thead>
+                        <tr>
+                                <th>Nom</th>
+                                <th>Emetteur</th>
+                                <th>Date du document</th>
+                                <th>Etiquettes</th>
+                        </tr>
+                </thead>
+                <tbody>
+                        {% for fichier in fichiers %}
+                                <tr>
+                                        <td><a href='{% url 'fichier-detail' fichier.id %}'>{{ fichier.nom_fichier }}</a></td>
+                                        <td>{{ fichier.emetteur }}</td>
+                                        <td>{{ fichier.date_document }}</td>
+                                        <td>
+                                                {% for etiquette in all_etiquette %}
+                                                        {{ etiquette.nom }}
+                                                        {% if not forloop.last %} | {% endif %}
+                                                {% endfor %}
+                                        </td>
+                                </tr>
+                        {% endfor %}
+                </tbody>
+        </table>
+</div>

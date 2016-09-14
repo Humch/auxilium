@@ -1,5 +1,58 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block title %}{{ fichier.nom_fichier }}{% endblock %}
 
+{% block menu-off-canvas-small %}
+{% endblock %}
+{% block menu-off-canvas-medium %}
+{% endblock %}
+
+{% block content %}
+    <div class='column row'>
+        <h2 class='text-center'>{{ fichier.nom_fichier }}</h2>
+    </div>
+    <div class='row'>
+        <div class='small-4 columns'>
+            <img class='thumbnail' src="{{ fichier.thumbnail.url }}"/>
+        </div>
+        <div class='small-8 columns'>
+            <p>
+                <div class="button-group">
+                    <button class="button success" onClick="updateFichier({{ fichier.id }})"><i class="fi-pencil"></i> Editer</button>
+                    <button class="button"><i class="fi-share"></i> Partager</button>
+                    <button class="alert button" onClick="deleteFichier({{ fichier.id }})"><i class="fi-x"></i> Supprimer</button>
+                </div>
+            </p>
+            <p> Date du document : {{ fichier.date_document }} </p>
+            <p> Emetteur du document : {{ fichier.emetteur }} </p>
+            <p> Etiquettes du document : {% for etiquette in all_etiquette %}{{ etiquette.nom }}{% if not forloop.last %} | {% endif %}{% endfor %}</p>
+            <p><a href='{{fichier.fichier.url}}' target="_blank" class='button'><i class="fi-download"></i> Télécharger le fichier</a></p>
+        </div>
+    </div>
+    
+	<div class="reveal" id="FichierUpdate" data-reveal>
+	</div>
+	<div class="reveal" id="FichierDelete" data-reveal>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+
+		<script type="text/javascript">
+		function updateFichier($idFichier) {
+			$.ajax('/g/g_maj/' + $idFichier + '/')
+			.done(function(resp){
+				$("#FichierUpdate").html(resp).foundation('open');
+			});
+		}
+	</script>
+	
+	<script type="text/javascript">
+		function deleteFichier($idFichier) {
+			$.ajax('/g/g_delete/' + $idFichier + '/')
+		.done(function(resp){
+			$("#FichierDelete").html(resp).foundation('open');
+		});
+		}
+	</script>
 {% endblock %}

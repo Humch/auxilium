@@ -1,5 +1,5 @@
 <div class="row">
-	<form action="/g/g_maj/{{ fichier.id }}/" method="post">
+	<form action="{% url 'fichier-update' fichier.id %}" method="post">
 		{% csrf_token %}
 		{{ form.as_p }}
 		<p class="text-center">

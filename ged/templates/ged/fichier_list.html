@@ -26,7 +26,7 @@
         <script type="text/javascript">
 		function changeVueFichier(action){
 			$.ajax({
-				url:'/g/g_',
+				url:'{% url 'fichier-list' %}',
 				data: {action: action},
 				dataType: "html",
 				type: 'GET',

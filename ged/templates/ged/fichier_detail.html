@@ -18,9 +18,9 @@
         <div class='small-8 columns'>
             <p>
                 <div class="button-group">
-                    <button class="button success" onClick="updateFichier({{ fichier.id }})"><i class="fi-pencil"></i> Editer</button>
+                    <button class="button success" onClick="updateFichier('{% url 'fichier-update' fichier.id %}')"><i class="fi-pencil"></i> Editer</button>
                     <button class="button"><i class="fi-share"></i> Partager</button>
-                    <button class="alert button" onClick="deleteFichier({{ fichier.id }})"><i class="fi-x"></i> Supprimer</button>
+                    <button class="alert button" onClick="deleteFichier('{% url 'fichier-delete' fichier.id %}')"><i class="fi-x"></i> Supprimer</button>
                 </div>
             </p>
             <p> Date du document : {{ fichier.date_document }} </p>
@@ -40,7 +40,7 @@
 
 		<script type="text/javascript">
 		function updateFichier($idFichier) {
-			$.ajax('/g/g_maj/' + $idFichier + '/')
+			$.ajax($idFichier)
 			.done(function(resp){
 				$("#FichierUpdate").html(resp).foundation('open');
 			});
@@ -49,7 +49,7 @@
 	
 	<script type="text/javascript">
 		function deleteFichier($idFichier) {
-			$.ajax('/g/g_delete/' + $idFichier + '/')
+			$.ajax($idFichier)
 		.done(function(resp){
 			$("#FichierDelete").html(resp).foundation('open');
 		});

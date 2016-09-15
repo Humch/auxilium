@@ -1,5 +1,5 @@
 <div class='row' >
-	<form action="/g/g_delete/{{ fichier.id }}/" method="post">
+	<form action="{% url 'fichier-delete' fichier.id %}" method="post">
 		{% csrf_token %}
 		<p class="text-center">Voulez vous vraiment effacer {{ fichier.nom_fichier }} ?</p>
 		<p class="text-center">

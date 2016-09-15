@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse_lazy
 import json
 
 from .models import Fichier, Etiquette
+from .forms import FichierUpdateForm
 
 # Mixin pour la gestion des formulaires envoyés par AJAX --> issu du site Django https://docs.djangoproject.com/fr/1.9/topics/class-based-views/generic-editing/
 
@@ -105,8 +106,9 @@ class FichierDetail(DetailView):
         return super(FichierDetail, self).dispatch(*args, **kwargs)
 
 class FichierUpdate(AjaxableResponseMixin, UpdateView):
+    
     model = Fichier
-    fields = ['fichier','nom_fichier','emetteur','date_document','etiquette']
+    form_class = FichierUpdateForm
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):

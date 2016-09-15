@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from wand.image import Image
 
@@ -33,5 +34,8 @@ class Fichier(models.Model):
 
     def __str__(self):
         return self.nom_fichier
+    
+    def get_absolute_url(self):
+        return reverse('fichier-detail', kwargs={'pk': self.pk})
     
 # TODO ==> creer une methode post_save

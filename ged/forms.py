@@ -13,6 +13,6 @@ class FichierUpdateForm(ModelForm):
     class Meta:
         
         model = Fichier
-        fields = ['fichier','nom_fichier','emetteur','date_document','etiquette']
+        fields = ['fichier','nom_fichier','emetteur','destinataire','date_document','etiquette']
 
         

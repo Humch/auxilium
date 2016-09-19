@@ -163,3 +163,7 @@ button.pill-special-width {
 div.margin-bottom {
   margin-bottom: 10px;
 }
+
+p.text-smaller {
+  font-size: smaller;
+}

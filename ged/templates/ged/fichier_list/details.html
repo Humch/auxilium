@@ -2,16 +2,17 @@
             {% cycle '<div class="row">' '' '' %}
             <div class="small-4 columns {% if forloop.last %} end {% endif %}">
                 <div class= 'column row'>
-                        <h6 class="subheader text-center">{{ fichier.nom_fichier }}</h6>
+                        <h6 class="subheader text-center"><a href='{% url 'fichier-detail' fichier.id %}'>{{ fichier.nom_fichier }}</a></h6>
                         <hr>
                 </div>
                 <div class='row'>
                         <div class='small-6 columns'>
-                                <a class="thumbnail" href='{% url 'fichier-detail' fichier.id %}'><img src="{{ fichier.thumbnail.url }}"/></a>
+                                <img class="thumbnail" src="{{ fichier.thumbnail.url }}"/>
                         </div>
                         <div class='small-6 columns'>
                                 <p class="text-smaller">{{ fichier.date_document|date:"t/m/y" }}</p>
                                 <p class="text-smaller">Emetteur : {{ fichier.emetteur }}</p>
+                                <p class="text-smaller">Destinataire : {{ fichier.destinataire }}</p>
                         </div>
                 </div>
             </div>

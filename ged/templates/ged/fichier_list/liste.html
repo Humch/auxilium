@@ -3,7 +3,8 @@
                 <thead>
                         <tr>
                                 <th>Nom</th>
-                                <th>Emetteur</th>
+                                <th class='text-center'>Emetteur</th>
+                                <th class='text-center'>Destinataire</th>
                                 <th>Date du document</th>
                                 <th>Etiquettes</th>
                         </tr>
@@ -12,7 +13,8 @@
                         {% for fichier in fichiers %}
                                 <tr>
                                         <td><a href='{% url 'fichier-detail' fichier.id %}'>{{ fichier.nom_fichier }}</a></td>
-                                        <td>{{ fichier.emetteur }}</td>
+                                        <td class='text-center'>{{ fichier.emetteur }}</td>
+                                        <td class='text-center'>{{ fichier.destinataire }}</td>
                                         <td>{{ fichier.date_document }}</td>
                                         <td>
                                                 {% for etiquette in all_etiquette %}

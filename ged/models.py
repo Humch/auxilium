@@ -12,6 +12,13 @@ class Emetteur(models.Model):
     def __str__(self):
         return self.nom
 
+class Destinataire(models.Model):
+    
+    nom = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.nom
+
 class Etiquette(models.Model):
     
     nom = models.CharField(max_length=200)
@@ -25,6 +32,7 @@ class Fichier(models.Model):
     nom_fichier = models.CharField(max_length=200)
     thumbnail = models.ImageField(upload_to='GED/thumb/',default='GED/thumb/default-fichier.jpg',blank=True)
     emetteur = models.ForeignKey(Emetteur, on_delete=models.CASCADE)
+    destinataire = models.ForeignKey(Destinataire, on_delete=models.CASCADE)
     etiquette = models.ManyToManyField(Etiquette,blank=True)
     date_creation = models.DateTimeField(auto_now_add = True)
     date_modification = models.DateTimeField(auto_now = True)

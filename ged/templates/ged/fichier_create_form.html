@@ -1,0 +1,38 @@
+<div class="row">
+	<form action="" method="post" id="addFichierSend" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<p class="text-center">
+			<input type="submit" class="button" value="Valider">
+		</p>
+	</form>
+</div>
+<button class="close-button" data-close aria-label="Close modal" type="button">
+	<span aria-hidden="true">&times;</span>
+</button>
+
+	<script type="text/javascript">
+		$(function(){
+			$('#id_date_document').fdatepicker({
+				format: 'dd/mm/yyyy',
+				disableDblClickSelection: true
+			});
+		});
+	</script>
+	<script type="text/javascript">
+		$( '#addFichierSend' )
+			.submit( function( e ) {
+				$.ajax( {
+					success:  function() {
+						$('#addFichierSend')[0].reset();
+					},
+					url: '{% url 'fichier-create' %}',
+					type: 'POST',
+					data: new FormData( this ),
+					processData: false,
+					contentType: false
+				} );
+				e.preventDefault();
+				
+			} );
+	</script>

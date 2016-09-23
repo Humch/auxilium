@@ -1,3 +1,4 @@
+{% if fichiers %}
 <div class='row'>
         <table class="stack_small">
                 <thead>
@@ -27,3 +28,6 @@
                 </tbody>
         </table>
 </div>
+{% else %}
+        <h1 class=" text-center subheader">Vous n'avez pas encore de document ! Allez au boulot ! ;)</h1>
+{% endif %}

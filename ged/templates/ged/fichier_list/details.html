@@ -17,4 +17,6 @@
                 </div>
             </div>
             {% cycle '' '' '</div>'%}
+    {% empty %}
+        <h1 class=" text-center subheader">Vous n'avez pas encore de document ! Allez au boulot ! ;)</h1>
     {% endfor %}

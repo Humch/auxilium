@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
+{% load static from staticfiles %}
+
 {% block title %}Liste des fichiers{% endblock %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static "css/foundation-datepicker.min.css" %}">
+{% endblock %}
 
 {% block menu-off-canvas-small %}
 {% endblock %}
@@ -9,7 +15,10 @@
 
 {% block content %}
         <div class='row margin-bottom'>
-                <div class='small-12 columns'>
+		<div class='small-7 columns'>
+			<p class="text-center"><button class='button' onClick="addFichier()">Ajouter un document <i class="fi-plus"></i></button></p>
+		</div>
+                <div class='small-5 columns'>
                         <div class="small button-group">
                                 <a class="button" onClick="changeVueFichier('details')"><i class="fi-list-thumbnails"></i> Détails</a>
                                 <a class="button" onClick="changeVueFichier('liste')"><i class="fi-list"></i> Liste</a>
@@ -20,9 +29,16 @@
 <span id="vue_fichier">
  {% include request.session.vuefichier %}
 </span>
+
+<div class="reveal" id="addFichierForm" data-reveal>
+</div>
 {% endblock %}
 
 {% block javascript %}
+
+	<script src="{% static 'js/foundation-datepicker.min.js' %}"></script>
+	<script src="{% static 'js/foundation-datepicker.fr.js' %}"></script>
+
         <script type="text/javascript">
 		function changeVueFichier(action){
 			$.ajax({
@@ -38,4 +54,13 @@
 				});
 		}
 	</script>
+	<script type="text/javascript">
+		function addFichier() {
+			$.ajax('{% url 'fichier-create' %}')
+			.done(function(resp){
+				$("#addFichierForm").html(resp).foundation('open');
+			});
+		}
+	</script>
+
 {% endblock %}

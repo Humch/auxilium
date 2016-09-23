@@ -34,7 +34,7 @@ class AjaxableResponseMixin(object):
         if self.request.is_ajax():
             data = {
                 'pk': self.object.pk,
-                'nom': self.object.nom,
+                'nom_fichier': self.object.nom_fichier,
             }
             return JsonResponse(data)
         else:
@@ -104,6 +104,16 @@ class FichierDetail(DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(FichierDetail, self).dispatch(*args, **kwargs)
+
+class FichierCreate(AjaxableResponseMixin, CreateView):
+    
+    model = Fichier
+    fields = ['fichier','nom_fichier','emetteur','destinataire','date_document','etiquette','propriete_de']
+    template_name = 'ged/fichier_create_form.html'
+    
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(FichierCreate, self).dispatch(*args, **kwargs)
 
 class FichierUpdate(AjaxableResponseMixin, UpdateView):
     

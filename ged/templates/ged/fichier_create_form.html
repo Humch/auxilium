@@ -3,7 +3,8 @@
 		{% csrf_token %}
 		{{ form.as_p }}
 		<p class="text-center">
-			<input type="submit" class="button" value="Valider">
+			
+			<input type="submit" class="button" value="Valider">  <a class='button' href='{% url 'fichier-list' %}'> C'est terminé !</a>
 		</p>
 	</form>
 </div>

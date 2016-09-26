@@ -111,6 +111,14 @@ class FichierCreate(AjaxableResponseMixin, CreateView):
     fields = ['fichier','nom_fichier','emetteur','destinataire','date_document','etiquette','propriete_de']
     template_name = 'ged/fichier_create_form.html'
     
+    def get_initial(self):
+        
+        initial = super(FichierCreate, self).get_initial()
+        
+        initial['propriete_de'] = self.request.user
+        
+        return initial
+    
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(FichierCreate, self).dispatch(*args, **kwargs)

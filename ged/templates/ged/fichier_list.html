@@ -15,11 +15,11 @@
 
 {% block content %}
         <div class='row margin-bottom'>
-		<div class='small-7 columns'>
+		<div class='small-6 columns'>
 			<p class="text-center"><button class='button' onClick="addFichier()">Ajouter un document <i class="fi-plus"></i></button></p>
 		</div>
-                <div class='small-5 columns'>
-                        <div class="small button-group">
+                <div class='small-6 columns'>
+                        <div class="small button-group stacked-for-small">
                                 <a class="button" onClick="changeVueFichier('details')"><i class="fi-list-thumbnails"></i> Détails</a>
                                 <a class="button" onClick="changeVueFichier('liste')"><i class="fi-list"></i> Liste</a>
                                 <a class="button" onClick="changeVueFichier('mosaique')"><i class="fi-thumbnails"> Mosaïque</i></a>
@@ -32,6 +32,39 @@
 
 <div class="reveal" id="addFichierForm" data-reveal>
 </div>
+
+<!-- pagination avec filtre des catégories et recherche d'articles-->
+	{% if is_paginated %}
+	<div class="row">
+		<ul class="pagination text-center" role="navigation" aria-label="Pagination">
+			{% if page_obj.has_previous %}
+				<li class="pagination-previous"><a href="{% url 'fichier-list' %}?page={{ page_obj.previous_page_number }}" aria-label="Previous page"><i class="fi-previous"></i></a></li>
+				<li><a href="{% url 'fichier-list' %}?page={{ page_obj.paginator.page_range|first }}" aria-label="Page {{ page_obj.paginator.page_range|first }}">{{ page_obj.paginator.page_range|first }}</a></li>
+			{% else %}
+				<li class="pagination-previous disabled"><i class="fi-previous"></i></li>
+			{% endif %}
+				{% for page in page_obj.paginator.page_range %}
+					{% if page == page_obj.number %}
+						<li class="current">{{ page_obj.number }}</li>
+					{% elif page == page_obj.paginator.page_range|first %}
+					{% elif page == page_obj.paginator.page_range|last %}
+					{% elif page == page_obj.number|add:"4" or page == page_obj.number|add:"-4" %}
+						<li class="ellipsis"></li>
+					{% elif page > page_obj.number|add:"4" or page < page_obj.number|add:"-4" %}
+					{% else %}
+						<li><a href="{% url 'fichier-list' %}?page={{ page }}" aria-label="Page {{ page }}">{{ page }}</a></li>
+					{% endif %}
+				{% endfor %}
+			{% if page_obj.has_next %}
+				<li><a href="{% url 'fichier-list' %}?page={{ page_obj.paginator.page_range|last }}" aria-label="Page {{ page_obj.paginator.page_range|last }}">{{ page_obj.paginator.page_range|last }}</a></li>
+				<li class="pagination-next"><a href="{% url 'fichier-list' %}?page={{ page_obj.next_page_number }}" aria-label="Next page"><i class="fi-next"></i></a></li>
+			{% else %}
+				<li class="pagination-next disabled"><i class="fi-next"></i></li>
+			{% endif %}
+		</ul>
+	</div>		
+	{% endif %}
+<!-- fin de la pagination -->
 {% endblock %}
 
 {% block javascript %}
@@ -42,7 +75,7 @@
         <script type="text/javascript">
 		function changeVueFichier(action){
 			$.ajax({
-				url:'{% url 'fichier-list' %}',
+				url:'{% url 'fichier-list' %}?page={{ page_obj.number }}',
 				data: {action: action},
 				dataType: "html",
 				type: 'GET',

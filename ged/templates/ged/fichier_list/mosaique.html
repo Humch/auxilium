@@ -7,3 +7,7 @@
 {% empty %}
     <h1 class=" text-center subheader">Vous n'avez pas encore de document ! Allez au boulot ! ;)</h1>            
 {% endfor %}
+
+{% if fichiers|length|divisibleby:4 is not True %}
+        </div>
+{% endif %}

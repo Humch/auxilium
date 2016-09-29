@@ -4,7 +4,7 @@
 		{{ form.as_p }}
 		<p class="text-center">
 			
-			<input type="submit" class="button" value="Valider">  <a class='button' href='{% url 'fichier-list' %}'> C'est terminé !</a>
+			<input type="submit" class="button" value="Valider">  <button class='button' onclick="reloadPage()"> C'est terminé !</button>
 		</p>
 	</form>
 </div>
@@ -36,4 +36,9 @@
 				e.preventDefault();
 				
 			} );
+	</script>
+	<script type="text/javascript">
+		function reloadPage() {
+			location.reload();
+		}
 	</script>

@@ -1,5 +1,4 @@
-beautifulsoup4==4.5.1
-bs4==0.0.1
 Django==1.10
 Pillow==3.3.0
 sqlparse==0.2
+Wand==0.4.3
